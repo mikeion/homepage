@@ -6,6 +6,8 @@ title: 'Mike Ion | Homepage'
 
 url: 'http://webjeda.com'
 
+repository: mikeion/homepage
+
 #change it according to your repository name
 # disabling since we are using a custom domain
 #baseurl: '/online-cv' 

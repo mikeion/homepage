@@ -1,15 +1,13 @@
 ---
-title: "Building with OpenAI API"
+title: "Building an Interactive PDF Q&A System with GPT-3.5-turbo, FAISS, and Streamlit"
 categories:
-  - Blog
+  - blog
 tags:
   - nlp
   - large language models
   - app development
   - openai
 ---
-
-# Blog Post Draft
 
 ## Introduction
 

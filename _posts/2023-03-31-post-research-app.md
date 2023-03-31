@@ -68,11 +68,11 @@ FAISS (Facebook AI Similarity Search) is a library designed to perform efficient
 
 To create a FAISS index, we need to perform the following steps:
 
-    Determine the Dimensionality: We need to determine the dimensionality of the embeddings we plan to index. The dimensionality is simply the number of components in each embedding vector.
+1. Determine the Dimensionality: We need to determine the dimensionality of the embeddings we plan to index. The dimensionality is simply the number of components in each embedding vector.
 
-    Initialize the Index: We initialize the FAISS index using the dimensionality of the embeddings. In our program, we use an IndexFlatL2 index, which is a basic index type that performs L2 distance-based similarity search.
+2. Initialize the Index: We initialize the FAISS index using the dimensionality of the embeddings. In our program, we use an IndexFlatL2 index, which is a basic index type that performs L2 distance-based similarity search.
 
-    Add Embeddings to the Index: Once the index is initialized, we add the embeddings to the index. This process involves transferring the embeddings to the FAISS index structure so they can be searched efficiently.
+3. Add Embeddings to the Index: Once the index is initialized, we add the embeddings to the index. This process involves transferring the embeddings to the FAISS index structure so they can be searched efficiently.
 
 Here is a code snippet to show how to implement this in practice:
 
@@ -95,9 +95,9 @@ After creating a FAISS index with the embeddings of the sections of text within 
 
 To perform similarity search using a FAISS index, we need to follow these steps:
 
-    Prepare the Query Embedding: We need to ensure that the query embedding (the embedding of the user's question) is in the correct format. It should be a 2D array where the number of rows corresponds to the number of queries (in our case, usually 1), and the number of columns corresponds to the dimensionality of the embeddings.
+1. Prepare the Query Embedding: We need to ensure that the query embedding (the embedding of the user's question) is in the correct format. It should be a 2D array where the number of rows corresponds to the number of queries (in our case, usually 1), and the number of columns corresponds to the dimensionality of the embeddings.
 
-    Perform the Search: We use the search method of the FAISS index to search for the most similar embeddings to the query embedding. We can specify the number of nearest neighbors (k) we want to retrieve. The search method returns two arrays: distances and indices. The distances array contains the L2 distances between the query embedding and the nearest neighbors found in the index. The indices array contains the indices of the nearest neighbors in the original dataset.
+2. Perform the Search: We use the search method of the FAISS index to search for the most similar embeddings to the query embedding. We can specify the number of nearest neighbors ($k$) we want to retrieve. The search method returns two arrays: distances and indices. The distances array contains the L2 distances between the query embedding and the nearest neighbors found in the index. The indices array contains the indices of the nearest neighbors in the original dataset.
 
 ```python
 def search_similar_embeddings(query_embedding, index, k=1):
@@ -120,11 +120,11 @@ The GPT-3.5-turbo model is capable of understanding natural language input and g
 
 To generate responses using GPT-3.5-turbo, we perform the following steps:
 
-    Prepare the Prompt: We create a prompt for the language model that includes the user's question and the relevant text from the PDFs. The prompt should be designed in a way that guides the model to provide a relevant and informative response.
+1. Prepare the Prompt: We create a prompt for the language model that includes the user's question and the relevant text from the PDFs. The prompt should be designed in a way that guides the model to provide a relevant and informative response.
 
-    Call the OpenAI API: We use the OpenAI API to send the prompt to the GPT-3.5-turbo model. The API returns a response that includes the model-generated text.
+2. Call the OpenAI API: We use the OpenAI API to send the prompt to the GPT-3.5-turbo model. The API returns a response that includes the model-generated text.
 
-    Extract the Answer: We extract the answer from the model-generated text and present it to the user.
+3. Extract the Answer: We extract the answer from the model-generated text and present it to the user.
 
 The following code snippet demonstrates how we interact with the GPT-3.5-turbo model to generate responses:
 

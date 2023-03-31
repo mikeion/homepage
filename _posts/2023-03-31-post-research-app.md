@@ -9,8 +9,6 @@ tags:
   - openai
 ---
 
-## Introduction
-
 Hello, everyone! In today's post, I am excited to share with you one of the apps that I've been working on. The purpose of this app is to allow users to submit PDFs and interactively ask questions about the content within them. The program analyzes the text in the PDFs and provides answers to the users' questions based on the information available in the documents.
 
 > [Research Paper Guru](https://huggingface.co/spaces/mikeion/research_guru)

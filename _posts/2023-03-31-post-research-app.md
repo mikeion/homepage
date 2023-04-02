@@ -24,17 +24,35 @@ The first step in building our interactive Q&A system is to extract the text fro
 With pyPDF2, we can open a PDF file and read its contents page by page. The library allows us to extract the text from each page and concatenate it to form a complete representation of the document's content. Here is a code snippet that demonstrates how we use pyPDF2 to extract text from a PDF file:
 
 ```python
+# Import the PyPDF2 library
 import PyPDF2
 
+"""
+Extract text from a PDF file
+
+:param pdf_path: The path to the PDF file
+:return: The text extracted from the PDF file
+
+"""
+
 def extract_text_from_pdf(pdf_path):
+    # Open the PDF file
     with open(pdf_path, 'rb') as pdf_file:
+        # Read the PDF file
         pdf_reader = PyPDF2.PdfFileReader(pdf_file)
+        # Get the number of pages in the PDF
         num_pages = pdf_reader.numPages
+        # Initialize an empty string to store the text
         full_text = ''
+        # Loop through each page and extract the text
         for page_num in range(num_pages):
+            # Get the page object
             page = pdf_reader.getPage(page_num)
+            # Extract the text from the page
             page_text = page.extractText()
+            # Append the text to the full_text variable
             full_text += page_text
+    # Return the full text of the PDF
     return full_text
 ```
 
@@ -51,9 +69,23 @@ Embeddings are numerical representations of text that capture semantic informati
 Here is how we obtain embeddings for the text:
 
 ```python
+# Import the OpenAI library
 import openai
+    
+    """
+    Generate embeddings for a list of text strings
+
+    :param text_list: A list of text strings
+    :return: A NumPy array of embeddings
+
+    """
 
 def get_embeddings(text_list):
+    # Generate embeddings for the text strings, using the default parameters.
+    # The default parameters are: model="ada", version="2020-05-03", and
+    # return_metadata=False.
+    # See the OpenAI documentation for more information: https://beta.openai.com/docs/api-reference/embeddings
+
     embeddings = openai.embeddings(text_list)
     return embeddings
 ```
@@ -76,11 +108,23 @@ Here is a code snippet to show how to implement this in practice:
 
 
 ```python
+
 import faiss
 
+    """
+    Create a FAISS index for a set of embeddings
+
+    :param embeddings: A NumPy array of embeddings
+    :return: A FAISS index
+
+    """
+
 def create_faiss_index(embeddings):
+    # Determine the dimensionality of the embeddings
     dimension = embeddings.shape[1]
+    # Initialize the FAISS index
     index = faiss.IndexFlatL2(dimension)
+    # Add the embeddings to the index, using .add(), as index is a object.
     index.add(embeddings)
     return index
 ```
@@ -98,10 +142,22 @@ To perform similarity search using a FAISS index, we need to follow these steps:
 2. Perform the Search: We use the search method of the FAISS index to search for the most similar embeddings to the query embedding. We can specify the number of nearest neighbors ($k$) we want to retrieve. The search method returns two arrays: distances and indices. The distances array contains the L2 distances between the query embedding and the nearest neighbors found in the index. The indices array contains the indices of the nearest neighbors in the original dataset.
 
 ```python
-def search_similar_embeddings(query_embedding, index, k=1):
-    distances, indices = index.search(query_embedding, k)
-    return distances, indices
 
+"""
+Search for similar embeddings in a FAISS index
+
+:param query_embedding: A NumPy array of embeddings
+:param index: A FAISS index
+:param k: The number of nearest neighbors to retrieve
+:return: A tuple containing the distances and indices of the nearest neighbors
+
+"""
+
+def search_similar_embeddings(query_embedding, index, k=1):
+    # Ensure that the query embedding is a 2D array
+    distances, indices = index.search(query_embedding, k)
+    # Return the distances and indices of the nearest neighbors
+    return distances, indices
 ```
 
 In this code snippet, we define a function ``search_similar_embeddings`` that takes a query embedding, a FAISS index, and an optional parameter $k$ as input. We ensure that the query embedding is a 2D array by reshaping it using ``query_embedding.reshape(1, -1)``. We then use the search method of the FAISS index to find the k nearest neighbors. The function returns the distances and indices of the nearest neighbors.
@@ -129,18 +185,28 @@ The following code snippet demonstrates how we interact with the GPT-3.5-turbo m
 ```python
 import openai
 
+"""
+Generate a response using the GPT-3.5-turbo model
+
+:param prompt: A string containing the prompt for the model
+:param model: The name of the model to use
+:return: A string containing the model-generated text
+
+"""
+
+
 def generate_response(prompt, model="gpt-3.5-turbo"):
-    # Step 2: Call the OpenAI API
+    # Step 1: Prepare the prompt
     response = openai.Completion.create(engine=model, prompt=prompt, max_tokens=150)
     
-    # Step 3: Extract the answer
+    # Step 2: Extract the answer
     answer = response["choices"][0]["text"].strip()
     
     return answer
 
 # Example usage
-user_question = "What are the benefits of exercise?"
-relevant_text = "Exercise has many benefits, including improving cardiovascular health, building muscle strength, and reducing stress."
+user_question = "What are some of the different ways students can think about the derivative?"
+relevant_text = "There are many ways students can think about the derivative. For example, some problems ask students to use a graph of the derivative of a function to say something about the original function, which requires students to think about the derivative graphically. Another subset of problems might ask students to use take the limit of a difference quotient as the limit approaches 0 to find a derivative, which requires students to think about the derivative symbolically."
 prompt = f"User: {user_question}\nDocument: {relevant_text}\nAnswer:"
 answer = generate_response(prompt)
 ```
@@ -161,9 +227,20 @@ In addition, we host the application on Hugging Face Spaces, a platform that all
 Here is a simplified example of how we use Streamlit to build the front end of the application:
 
 ```python
+# Import the Streamlit library
+# Streamlit is a Python library for building interactive web apps
 import streamlit as st
 
-def app():
+"""
+
+# Q&A App
+
+This app allows users to upload PDF files and ask questions about the content.
+
+"""
+
+
+def q_and_a_app():
     # Create a file uploader for PDFs
     pdf_file = st.file_uploader("Upload a PDF file", type=["pdf"])
     
@@ -173,6 +250,7 @@ def app():
     # Create a button to submit the question
     submit_button = st.button("Submit")
     
+    # When the user clicks the "Submit" button, process the PDF and generate a response
     if submit_button:
         if pdf_file and question:
             # Process the PDF and generate a response (function calls omitted for brevity)
@@ -185,7 +263,6 @@ def app():
 # Run the Streamlit app
 if __name__ == "__main__":
     app()
-
 ```
 
 In this example, we use Streamlit's ``file_uploader`` to create an interface for users to upload PDF files. We use ``text_input`` to allow users to enter a question, and button to create a "Submit" button. When the user clicks the "Submit" button, the application processes the PDF, generates a response to the user's question, and displays the response using the write method.

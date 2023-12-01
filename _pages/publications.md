@@ -1,3 +1,9 @@
+---
+layout: single
+title: "Publications"
+permalink: /research/publications
+---
+
 ## Publications
 
 A selection of my peer-reviewed journal articles includes:

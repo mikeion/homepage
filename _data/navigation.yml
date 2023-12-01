@@ -1,6 +1,9 @@
 main:
   - title: "Research"
     url: /research/
+    children:
+      - title: "Publications"
+        url: /research/publications/
   - title: "Teaching"
     url: /teaching/
   - title: "Posts"

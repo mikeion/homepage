@@ -1,3 +1,10 @@
+---
+layout: single
+title: "Teaching"
+permalink: /teaching/
+---
+
+
 ### Uplimit (formerly Corise)
 **Teaching Assistant (TA) and Quality Assurance (QA)**
 

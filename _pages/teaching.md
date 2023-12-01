@@ -1,4 +1,3 @@
-
 ### Uplimit (formerly Corise)
 **Teaching Assistant (TA) and Quality Assurance (QA)**
 

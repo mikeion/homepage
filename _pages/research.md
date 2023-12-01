@@ -4,8 +4,6 @@ title: "Research"
 permalink: /research/
 ---
 
-# Research
-
 ## Interests
 
 My research interests lie at the intersection of data science, machine learning, and education. Specifically, I focus on:

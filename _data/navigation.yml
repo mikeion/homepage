@@ -1,10 +1,10 @@
 main:
-  - title: Research
+  - title: "Research"
     url: /research/
     subfolderitems:
       - title: "Publications"
         url: /research/publications/
-  - title: Teaching
+  - title: "Teaching"
     url: /teaching/
   - title: "Posts"
     url: /posts/

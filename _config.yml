@@ -28,12 +28,11 @@ markdown: kramdown
 remote_theme: mmistakes/minimal-mistakes
 # Outputting
 permalink: /:categories/:title/
-paginate: 4 # amount of posts to show
+paginate: 0 # amount of posts to show
 paginate_path: /page:num/
 timezone: America/New_York
 
 include:
-  - _pages
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list

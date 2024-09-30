@@ -87,7 +87,7 @@ defaults:
       layout: single
       author_profile: true
     #home
-    - scope:
+  - scope:
       path: ""
     values:
       layout: home

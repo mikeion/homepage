@@ -86,7 +86,12 @@ defaults:
     values:
       layout: single
       author_profile: true
-
+    #home
+    - scope:
+      path: ""
+    values:
+      layout: home
+      author_profile: true
 
 category_archive:
   type: liquid

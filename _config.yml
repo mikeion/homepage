@@ -92,6 +92,12 @@ defaults:
     values:
       layout: home
       author_profile: true
+    -scope:
+      path: "home.md"
+    values:
+      layout: home
+      author_profile: true
+      permalink: /
 
 category_archive:
   type: liquid

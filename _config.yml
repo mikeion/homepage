@@ -86,18 +86,12 @@ defaults:
     values:
       layout: single
       author_profile: true
-    #home
+  # home
   - scope:
-      path: ""
+      path: "index.html"
     values:
       layout: home
       author_profile: true
-    -scope:
-      path: "home.md"
-    values:
-      layout: home
-      author_profile: true
-      permalink: /
 
 category_archive:
   type: liquid

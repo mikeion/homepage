@@ -2,6 +2,7 @@
 layout: single
 title: "Publications"
 permalink: /research/publications
+author_profile: false
 ---
 
 <style>

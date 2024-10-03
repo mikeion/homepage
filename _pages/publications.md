@@ -5,33 +5,6 @@ permalink: /research/publications
 author_profile: false
 ---
 
-<style>
-.publications h3 {
-  color: #4a4a4a;
-  border-bottom: 2px solid #4a4a4a;
-  padding-bottom: 5px;
-  margin-top: 30px;
-}
-.publications ol {
-  padding-left: 20px;
-}
-.publications li {
-  margin-bottom: 15px;
-}
-.publications li strong {
-  color: #2a7ae2;
-}
-.publications li i {
-  color: #6c757d;
-}
-.publications a {
-  color: #1e7e34;
-  text-decoration: none;
-}
-.publications a:hover {
-  text-decoration: underline;
-}
-</style>
 
 <div class="publications">
 

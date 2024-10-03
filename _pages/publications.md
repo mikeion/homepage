@@ -44,7 +44,7 @@ A selection of my peer-reviewed journal articles, conference proceedings, presen
 <li> Gere, A., Godfrey, J., Griffin, M., <strong>Ion, M.</strong>, Limlamai, N., Moos, A., Van Zanen, K. (2023). <i>Alumni Perspectives on General Education: How Writing Can Increase What We Know.</i> <i>Journal of General Education, 70 (1-2), 149-175.</i> <a href="https://doi.org/10.5325/jgeneeduc.70.1-2.0149">[Link]</a></li>
 
 <h3>Book Chapters</h3>
-<li>Brown, A., Cohen, S., Escuadro, H., <strong>Ion, M.</strong>, Miller, N., Sears, R., ... & Vestal, S. (2024). Tuyin An. In Babette M. Benken (Ed./Eds.), *The AMTE Handbook of Mathematics Teacher Education: Reflection on Past, Present and Future–Paving the Way for the Future of Mathematics Teacher Education* (Vol. 5, p. 175). Information Age Publishing.
+<li>Brown, A., Cohen, S., Escuadro, H., <strong>Ion, M.</strong>, Miller, N., Sears, R., ... & Vestal, S. (2024). Tuyin An. In Babette M. Benken (Ed./Eds.), *The AMTE Handbook of Mathematics Teacher Education: Reflection on Past, Present and Future–Paving the Way for the Future of Mathematics Teacher Education* (Vol. 5, p. 175). Information Age Publishing. </li>
 
 <h3>Peer-Reviewed Conference Proceedings</h3>
 <li><strong>Ion, M.</strong>, Herbst, P., Ko, I., Hetrick, C. (Oct. 2023). <i> Surveying Instructors of Geometry for Teachers Courses: An Illustration of Balanced Incomplete Block Design. Psychology of Mathematics Education, North America Annual Conference. </i>  Reno, NV. </li>

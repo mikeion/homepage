@@ -15,8 +15,6 @@
 <li>Brown, A., Herbst, P., <strong>Ion, M.</strong> (Oct. 2023). <i> How Instructors of Undergraduate Mathematics Courses Manage Tensions Related to Teaching Courses for Teachers. Psychology of Mathematics Education, North America Annual Conference. </i> Reno, NV. </li>
 <li>Boyce, S., An, T., Pyzdrowski, L., Oppong-Wadie, K., <strong>Ion, M.</strong>, St. Goar, J. (Feb. 2023). <i> Learning from Lesson Study in the College Geometry Classroom. 25th Annual Conference on Research in Undergraduate Mathematics Education. </i> Omaha, NE. </li>
 <li>Hetrick, C., Herbst, P., <strong>Ion, M.</strong>, Brown, A. (Feb. 2023). <i> Building Instructional Capacity Across Difference: Analyzing Transdisciplinary Discourse in a Faculty Learning Community focused on Geometry for Teachers Courses. 25th Annual Conference on Research in Undergraduate Mathematics Education. </i> Omaha, NE. </li>
-
-<h3>Peer-Reviewed Conference Proceedings</h3>
 <li><strong>Ion, M.</strong> (Jul. 2022). <i> Studying Conceptions of the Derivative at Scale: A Machine Learning Approach. 45th Conference of the International Group for the Psychology of Mathematics Education. </i> Alicante, Spain. </li>
 <li><strong>Ion, M.</strong>, Herbst, P. (Feb. 2022). <i> Conceptions of the Derivative: A Natural Language Processing Approach. Research in Undergraduate Mathematics Education Conference. </i> Boston, MA.</li>
 <li>Margolis, C., <strong>Ion, M.</strong>, Herbst, P., Milewski, A., Shultz, M. (Nov. 2020). <i> Understanding instructional capacity for high school geometry as a systemic problem through stakeholder interviews. Psychology of Mathematics Education, North America. Mexico. </i> </li>

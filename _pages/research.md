@@ -15,7 +15,7 @@ My research interests lie at the intersection of data science, machine learning,
 
 ## Publications
 
-{{% include_relative publications.md %}}
+{% include_relative publications.md %}
 
 
 ## Experience

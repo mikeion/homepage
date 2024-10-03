@@ -1,14 +1,5 @@
----
-layout: single
-title: "Publications"
-permalink: /research/publications
-author_profile: false
----
-
 
 <div class="publications">
-
-A selection of my peer-reviewed journal articles, conference proceedings, presentations, and other scholarly works:
 
 <ol reversed>
 <h3>Peer-Reviewed Journal Articles</h3>

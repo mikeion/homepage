@@ -1,0 +1,236 @@
+/* Minimal homepage — Mike Ion */
+
+:root {
+  --text: #1a1a1a;
+  --muted: #6a6a6a;
+  --link: #0b5fff;
+  --rule: #e5e5e5;
+  --bg: #ffffff;
+  --max: 640px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: "Charter", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--text);
+  background: var(--bg);
+  margin: 0;
+  padding: 0;
+}
+
+main {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 3rem 1.25rem 4rem;
+}
+
+h1, h2, h3 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+h1 {
+  font-size: 1.6rem;
+  margin: 0 0 0.15rem 0;
+}
+
+h2 {
+  font-size: 1.05rem;
+  margin: 2.4rem 0 0.6rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+h3 {
+  font-size: 1rem;
+  margin: 1.5rem 0 0.3rem 0;
+}
+
+p { margin: 0 0 1rem 0; }
+
+a {
+  color: var(--link);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+a:hover { border-bottom-color: var(--link); }
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 2rem 0;
+}
+
+/* Nav */
+.topnav {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 0.88rem;
+  color: var(--muted);
+  margin-bottom: 3rem;
+}
+.topnav a {
+  color: var(--text);
+  border-bottom: none;
+}
+.topnav a:hover { color: var(--link); }
+.topnav .sep {
+  color: var(--rule);
+  margin: 0 0.35rem;
+}
+
+/* Hero */
+.hero { margin-bottom: 2.5rem; }
+.hero .role {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin-bottom: 1.2rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+/* Research directions */
+.threads { counter-reset: thread; padding: 0; list-style: none; margin: 0; }
+.threads li {
+  counter-increment: thread;
+  padding-left: 2.2rem;
+  position: relative;
+  margin-bottom: 1.1rem;
+}
+.threads li::before {
+  content: counter(thread, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.15rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+.threads strong { font-weight: 600; }
+
+/* Featured papers */
+.paper {
+  margin-bottom: 1.4rem;
+  padding-bottom: 1.4rem;
+  border-bottom: 1px solid var(--rule);
+}
+.paper:last-child { border-bottom: none; }
+.paper .venue {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 0.25rem;
+}
+.paper .title {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+.paper .blurb {
+  color: #333;
+  margin-bottom: 0.4rem;
+}
+.paper .meta {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.paper .meta a { color: var(--muted); }
+.paper .meta a:hover { color: var(--link); }
+
+/* News */
+.news { list-style: none; padding: 0; margin: 0; }
+.news li {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: 0.9rem;
+  margin-bottom: 0.55rem;
+  font-size: 0.95rem;
+}
+.news .date {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 0.82rem;
+  color: var(--muted);
+  padding-top: 0.15rem;
+}
+
+/* Publications page */
+.publications h3 {
+  font-size: 0.92rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-top: 2.4rem;
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+}
+.publications ol, .publications ul {
+  padding-left: 1.2rem;
+  margin: 0;
+}
+.publications li {
+  margin-bottom: 0.9rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Projects page */
+.project {
+  margin-bottom: 2rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid var(--rule);
+}
+.project:last-child { border-bottom: none; }
+.project h3 {
+  margin: 0 0 0.2rem;
+  font-size: 1.05rem;
+}
+.project .meta {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+.project p { margin: 0.4rem 0 0; }
+
+/* About page */
+.about .headshot {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 0 1.2rem 0;
+  display: block;
+}
+
+.hero-links {
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+}
+
+/* Footer */
+footer {
+  margin-top: 4rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+footer a { color: var(--muted); }
+footer a:hover { color: var(--link); }
+
+@media (max-width: 480px) {
+  main { padding: 2rem 1rem 3rem; }
+  .topnav { font-size: 0.82rem; }
+  .topnav .sep { margin: 0 0.2rem; }
+  .news li { grid-template-columns: 4.5rem 1fr; gap: 0.6rem; }
+}

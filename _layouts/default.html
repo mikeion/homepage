@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if page.title %}{{ page.title }} — {% endif %}{{ site.title }}</title>
+  <meta name="description" content="{{ site.description }}">
+  <link rel="canonical" href="{{ page.url | absolute_url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  {% feed_meta %}
+</head>
+<body>
+  <main>
+    <nav class="topnav">
+      <a href="{{ '/' | relative_url }}">home</a>
+      <span class="sep">·</span>
+      <a href="{{ '/about/' | relative_url }}">about</a>
+      <span class="sep">·</span>
+      <a href="{{ '/writing/' | relative_url }}">writing</a>
+      <span class="sep">·</span>
+      <a href="{{ '/publications/' | relative_url }}">publications</a>
+      <span class="sep">·</span>
+      <a href="{{ '/assets/docs/cv-ion.pdf' | relative_url }}">cv</a>
+      <span class="sep">·</span>
+      <a href="https://github.com/mikeion">github</a>
+    </nav>
+
+    {{ content }}
+
+    <footer>
+      <p>Mike Ion · <a href="mailto:mikeion@umich.edu">mikeion@umich.edu</a></p>
+    </footer>
+  </main>
+</body>
+</html>

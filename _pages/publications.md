@@ -1,56 +1,91 @@
+---
+layout: default
+title: "Publications"
+permalink: /publications/
+---
 
 <div class="publications">
 
-<ol reversed>
-<h3>Peer-Reviewed Journal Articles</h3>
-<li>Paulsen, A., Godfrey, J., <strong>Ion, M.</strong>, (In progress). <i>Writing Across the Curriculum: a Text as Data Approach.</i> <i>Target: American Educational Research Journal.</i></li>
-<li>Herbst, P., Brown, A.M., <strong>Ion, M.</strong>, Margolis, C. (2023). <i>Teaching Geometry for Secondary Teachers: What are the Tensions Instructors Need to Manage?</i> <i>International Journal of Research in Undergraduate Mathematics Education. (2023). International Journal for Research in Undergraduate Mathematics.</i> <a href="https://doi-org.proxy.lib.umich.edu/10.1007/s40753-023-00216-0">[Link]</a></li>
-<li> Gere, A., Godfrey, J., Griffin, M., <strong>Ion, M.</strong>, Limlamai, N., Moos, A., Van Zanen, K. (2023). <i>Alumni Perspectives on General Education: How Writing Can Increase What We Know.</i> <i>Journal of General Education, 70 (1-2), 149-175.</i> <a href="https://doi.org/10.5325/jgeneeduc.70.1-2.0149">[Link]</a></li>
+<h3>2026</h3>
+<ul>
+<li><strong>Ion, M.</strong>, Godfrey, J. (2026). <em>The Evaluation Blind Spot: Per-Prompt Similarity Can Systematically Misrank Instruction-Tuned Text Distributions.</em> In preparation, NeurIPS 2026.</li>
+<li>Light, M., <strong>Ion, M.</strong>, Collins-Thompson, K. (2026). <em>From Moves to Pathways: Characterizing Pedagogical Discourse Dynamics in Online Tutoring with Bayesian Generative Modeling.</em> 27th International Conference on Artificial Intelligence in Education (AIED '26), Late-Breaking Results (Posters) Track. Accepted, 29% acceptance rate.</li>
+<li><strong>Ion, M.</strong>, Collins-Thompson, K. (2026). <em>Measuring Simulation Fidelity via Statistical Detectability: A Diagnostic Framework for AI-Generated Tutoring Conversations.</em> In Proceedings of the 13th ACM Conference on Learning @ Scale (L@S '26). ACM, New York, NY, USA, 11 pages. Accepted, 22% acceptance rate.</li>
+<li><strong>Ion, M.</strong>, Collins-Thompson, K. (2026). <em>A Fidelity Diagnostic Workbench for Synthetic Tutoring Conversations.</em> ACM Conference on Learning @ Scale (L@S 2026), Demonstration Track.</li>
+</ul>
 
-<h3>Book Chapters</h3>
-<li>Brown, A., Cohen, S., Escuadro, H., <strong>Ion, M.</strong>, Miller, N., Sears, R., ... & Vestal, S. (2024). Tuyin An. In Babette M. Benken (Ed./Eds.), *The AMTE Handbook of Mathematics Teacher Education: Reflection on Past, Present and Future–Paving the Way for the Future of Mathematics Teacher Education* (Vol. 5, p. 175). Information Age Publishing. </li>
+<h3>2025</h3>
+<ul>
+<li><strong>Ion, M.</strong>, <a href="https://sites.google.com/view/alexmcdonough/home">McDonough, A.</a> (2025). <em>Chip-firing and the Sandpile Group of the R10 Matroid.</em> Preprint on arXiv; under review at Galois Journal of Algebra. <a href="https://arxiv.org/abs/2510.26021">[arXiv]</a></li>
+<li><strong>Ion, M.</strong>, Asthana, S., Jiao, F., Wang, T., Collins-Thompson, K. (2025). <em>Adaptive Knowledge Assessment in Simulated Coding Interviews.</em> Innovation and Responsibility in AI-Supported Education Workshop (AAAI 2025). Proceedings of Machine Learning Research, 273, 260–262. Philadelphia, PA. <a href="https://proceedings.mlr.press/v273/ion25a.html">[Link]</a></li>
+</ul>
 
-<h3>Peer-Reviewed Conference Proceedings</h3>
-<li><strong>Ion, M.</strong>, Herbst, P., Ko, I., Hetrick, C. (Oct. 2023). <i> Surveying Instructors of Geometry for Teachers Courses: An Illustration of Balanced Incomplete Block Design. Psychology of Mathematics Education, North America Annual Conference. </i>  Reno, NV. </li>
-<li>Brown, A., Herbst, P., <strong>Ion, M.</strong> (Oct. 2023). <i> How Instructors of Undergraduate Mathematics Courses Manage Tensions Related to Teaching Courses for Teachers. Psychology of Mathematics Education, North America Annual Conference. </i> Reno, NV. </li>
-<li>Boyce, S., An, T., Pyzdrowski, L., Oppong-Wadie, K., <strong>Ion, M.</strong>, St. Goar, J. (Feb. 2023). <i> Learning from Lesson Study in the College Geometry Classroom. 25th Annual Conference on Research in Undergraduate Mathematics Education. </i> Omaha, NE. </li>
-<li>Hetrick, C., Herbst, P., <strong>Ion, M.</strong>, Brown, A. (Feb. 2023). <i> Building Instructional Capacity Across Difference: Analyzing Transdisciplinary Discourse in a Faculty Learning Community focused on Geometry for Teachers Courses. 25th Annual Conference on Research in Undergraduate Mathematics Education. </i> Omaha, NE. </li>
-<li><strong>Ion, M.</strong> (Jul. 2022). <i> Studying Conceptions of the Derivative at Scale: A Machine Learning Approach. 45th Conference of the International Group for the Psychology of Mathematics Education. </i> Alicante, Spain. </li>
-<li><strong>Ion, M.</strong>, Herbst, P. (Feb. 2022). <i> Conceptions of the Derivative: A Natural Language Processing Approach. Research in Undergraduate Mathematics Education Conference. </i> Boston, MA.</li>
-<li>Margolis, C., <strong>Ion, M.</strong>, Herbst, P., Milewski, A., Shultz, M. (Nov. 2020). <i> Understanding instructional capacity for high school geometry as a systemic problem through stakeholder interviews. Psychology of Mathematics Education, North America. Mexico. </i> </li>
-<li>Bardelli, E., <strong>Ion, M.</strong>, Ko, I., Herbst, P. (Apr. 2020). <i> Who Benefits from Mathematics Courses for Teachers? An Analysis of MKT-G Growth During Geometry for Teachers Courses. American Education Research Association. </i> San Francisco, CA.  </li>
-<li><strong>Ion, M.</strong>, Herbst, P., Margolis, C., Milewski, A., Ko, I. (Nov. 2019). <i> Developing Practical Measures To Support the Improvement of Geometry for Teachers Courses. Psychology of Mathematics Education, North America Annual Conference. </i> St. Louis, MO. </li>
-<li>Milewski, A., <strong>Ion, M.</strong>, Herbst, P., Shultz, M., Ko, I., Bleecker, H. (Apr. 2019). <i> Tensions in Teaching Mathematics to Future Teachers: Understanding the Practice of Undergraduate Mathematics Instructors. American Education Research Association Conference. </i> Toronto, Canada. </li>
-<li>Herbst, P., Milewski, A., <strong>Ion, M.</strong>, Bleecker, H. (Oct.  2018). <i> What Influences Do Instructors of the Geometry for Teachers Course Need to Contend With? Psychology of Mathematics Education, North America. </i> Greenville, SC. </li>
+<h3>2024</h3>
+<ul>
+<li>An, T., Boyce, S., Brown, A., Buchbinder, O., Cohen, S., Dumitrascu, D., Escuadro, H., Herbst, P., <strong>Ion, M.</strong>, Krupa, E., Miller, N., Pyzdrowski, L., Sears, R., St. Goar, J., Szydlik, S., & Vestal, S. (2024). <em>(Toward) Essential Student Learning Objectives for Teaching Geometry to Pre-Service Secondary Teachers.</em> In B. M. Benken (Ed.), The AMTE Handbook of Mathematics Teacher Education (Vol. 5, pp. 175–197). Information Age Publishing.</li>
+</ul>
 
-<h3>Non-peer-reviewed articles and blog posts </h3>
-<li><strong>Ion, M.</strong>, Herbst, P. (Nov. 2021). <i> A Contribution to Stewarding the SLOs: Developing SLO Assessment Items and Examining Item Responses. GeT: The News!, 3</i>(1). </li>
-<li>Herbst, P., <strong>Ion, M.</strong> (Nov. 2021). <i> A Deeper Dive into an SLO Item: Examining Students' Ways of Reasoning about Relationships between Euclidean and Non-Euclidean Geometries.  GeT: The News!, 3 </i> (1). </li>
-<li>Boyce, S., <strong>Ion, M.</strong>, Lai, Y., McLeod, K., Pyzdrowski, L., Sears, R., St. Goar, J. (May 2021). <i> Best-Laid Co-Plans for a Lesson on Creating a Mathematical Definition. AMS Blogs: On Teaching and Learning Mathematics. </i> </li>
-<li>Paulsen, A., Godfrey, J., <strong>Ion, M.</strong>. (Mar. 2023). <i> Writing Across the Curriculum: a Case Study in Text as Data Methods for Post-secondary Education Policy Research. </i> Denver, CO. </li>
-<li><strong>Godfrey, J.</strong>, <strong>Paulson, A.</strong>, <strong>Ion, M.</strong> (2023). <i> What Are the Common Contexts for College Writing? Conference on College Composition and Communication Annual Convention. </i> Chicago, IL. </li>
+<h3>2023</h3>
+<ul>
+<li>Herbst, P., Brown, A.M., <strong>Ion, M.</strong>, Margolis, C. (2023). <em>Teaching Geometry for Secondary Teachers: What are the Tensions Instructors Need to Manage?</em> International Journal of Research in Undergraduate Mathematics Education. <a href="https://doi.org/10.1007/s40753-023-00216-0">[DOI]</a></li>
+<li>Gere, A., Godfrey, J., Griffin, M., <strong>Ion, M.</strong>, Limlamai, N., Moos, A., Van Zanen, K. (2023). <em>Alumni Perspectives on General Education: How Writing Can Increase What We Know.</em> Journal of General Education, 70(1–2), 149–175. <a href="https://doi.org/10.5325/jgeneeduc.70.1-2.0149">[DOI]</a></li>
+<li><strong>Ion, M.</strong>, Herbst, P., Ko, I., Hetrick, C. (2023). <em>Agreeing on Objectives of Geometry for Teachers' Courses: Feedback from Instructors on an Initial List.</em> Proceedings of the 45th Annual Meeting of the North American Chapter of the International Group for the Psychology of Mathematics Education (Vol. 2, pp. 362–369). Reno, NV.</li>
+<li>Hetrick, C., Herbst, P., Brown, A., <strong>Ion, M.</strong> (2023, April). <em>Contention and Coalescence in Mathematical Knowledge: Undergraduate Geometry Instructors' Cooperative Design of Student Learning Objectives.</em> American Educational Research Association Annual Meeting. Chicago, IL.</li>
+<li>Brown, A., Herbst, P., <strong>Ion, M.</strong> (2023). <em>How Instructors of Undergraduate Mathematics Courses Manage Tensions Related to Teaching Courses for Teachers.</em> Psychology of Mathematics Education, North America Annual Conference. Reno, NV.</li>
+<li>Boyce, S., An, T., Pyzdrowski, L., Oppong-Wadie, K., <strong>Ion, M.</strong>, St. Goar, J. (2023). <em>Learning from Lesson Study in the College Geometry Classroom.</em> 25th Annual Conference on Research in Undergraduate Mathematics Education. Omaha, NE.</li>
+<li>Hetrick, C., Herbst, P., <strong>Ion, M.</strong>, Brown, A. (2023). <em>Building Instructional Capacity Across Difference: Analyzing Transdisciplinary Discourse in a Faculty Learning Community Focused on Geometry for Teachers Courses.</em> 25th Annual Conference on Research in Undergraduate Mathematics Education. Omaha, NE.</li>
+</ul>
 
-<h3>Presentations & Conference Talks</h3>
+<h3>2022</h3>
+<ul>
+<li><strong>Ion, M.</strong> (2022). <em>Studying Conceptions of the Derivative at Scale: A Machine Learning Approach.</em> 45th Conference of the International Group for the Psychology of Mathematics Education. Alicante, Spain.</li>
+<li><strong>Ion, M.</strong>, Herbst, P. (2022). <em>Conceptions of the Derivative: A Natural Language Processing Approach.</em> Research in Undergraduate Mathematics Education Conference. Boston, MA.</li>
+<li>Ko, I., <strong>Ion, M.</strong>, Herbst, P. (2022). <em>Comparing the Mathematical Knowledge for Teaching Geometry of Preservice and Inservice Secondary Teachers.</em> 24th Annual Conference on Research in Undergraduate Mathematics Education (pp. 1235–1236). Boston, MA.</li>
+<li>Berzina-Pitcher, I., <strong>Ion, M.</strong>, An, T., Buchbinder, O., Herbst, P., Milewski, A., Miller, N., Prasad, P., Pyzdrowski, L., St. Goar, J., Sears, R., Szydlik, S., Vestal, S. (2022, April). <em>Learning and Participating in Scholarship of Teaching and Learning Through a Faculty Online Learning Community.</em> American Educational Research Association Annual Meeting. San Diego, CA.</li>
+<li>Ko, I., <strong>Ion, M.</strong>, Herbst, P. (2022, May). <em>Does Our MKT-G Instrument Measure the Same Knowledge in the Same Way for GeT Students and for Practicing Teachers?</em> GeT: The News!, 3(3).</li>
+</ul>
 
-<li>Paulsen, A., <strong>Ion, M.</strong>, Godfrey, J. (Dec. 2022). <i> Writing Across the Curriculum: a Text as Data Approach. Causal Inference in Education Research Seminar (CIERS). </i> Ann Arbor, MI. </li>
-<li>Paulson, A., Bardelli, E., Godfrey, J., <strong>Ion, M.</strong>, Frisby, M. (Apr. 2022). <i> Who Follows Placement Recommendations? Differential Effects of Non-binding Placement Recommendations on Students' Course-taking Decisions. American Education Research Association. </i> San Diego, CA. </li>
-<li>Herbst, P., Stevens, I., Milewski, A., <strong>Ion, M.</strong>, Ko, I. (Jan. 2020). <i> State of Undergraduate Geometry Courses for Secondary Teachers: Curriculum, Instructional Practices, and Student Achievement. Joint Mathematics Meeting. </i> Denver, CO.</li> 
-<li>Milewski, A., Herbst, P., <strong>Ion, M.</strong>, Bleecker, H. (Feb. 2019). <i> Preparing Teachers for Secondary Geometry: Understanding the Tensions in Teaching Undergraduate Mathematics Courses for Future Teachers. Association of Mathematics Teacher Educators Annual Conference. </i> Orlando, FL. </li>
-<li>Milewski, A., Herbst, P., Margolis, C., <strong>Ion, M.</strong>, Ko, I., Akbuga, E. (Jan. 2019). <i> What do we know about courses in Geometry for Secondary Teachers? Joint Mathematics Meetings. </i> Baltimore, Maryland.</li> 
+<h3>2021</h3>
+<ul>
+<li><strong>Ion, M.</strong>, Herbst, P. (2021). <em>A Contribution to Stewarding the SLOs: Developing SLO Assessment Items and Examining Item Responses.</em> GeT: The News!, 3(1).</li>
+<li>Herbst, P., <strong>Ion, M.</strong> (2021). <em>A Deeper Dive into an SLO Item.</em> GeT: The News!, 3(1).</li>
+<li>Boyce, S., <strong>Ion, M.</strong>, Lai, Y., McLeod, K., Pyzdrowski, L., Sears, R., St. Goar, J. (2021). <em>Best-Laid Co-Plans for a Lesson on Creating a Mathematical Definition.</em> AMS Blogs: On Teaching and Learning Mathematics.</li>
+</ul>
 
-<h3>Roundtable Discussions</h3>
-<li>Berzina Pitcher, I., <strong>Ion, M.</strong>, An, T., Brown, A., Buchbinder, O., Herbst, P., Hetrick, C., Miller, N., Prasad, P., Pyzdrowski, L., St. Goar, J., Sears, R., Szydlik, S., Oshkosh, Vestal, S. (Apr. 2022). <i> Learning and Participating in Scholarship of Teaching and Learning through a Faculty Online Learning Community. American Education Research Association. </i> San Diego, CA.</li> 
-<li><strong>Ion, M.</strong>, Margolis, C. (Mar. 2019). <i> Sources of Justification for College Geometry Instructional Actions. Graduate Student Community Organization Graduate Student Conference. </i> Ann Arbor, MI.</li> 
-<li><strong>Ion, M.</strong> (Mar. 2018). <i> Characterizing University Geometry Courses: An Interview-Based Approach. Graduate Student Community Organization Graduate Student Conference. </i> Ann Arbor, MI.</li> 
+<h3>2020</h3>
+<ul>
+<li>Margolis, C., <strong>Ion, M.</strong>, Herbst, P., Milewski, A., Shultz, M. (2020). <em>Understanding Instructional Capacity for High School Geometry as a Systemic Problem Through Stakeholder Interviews.</em> Psychology of Mathematics Education, North America. Mexico.</li>
+<li>Bardelli, E., <strong>Ion, M.</strong>, Ko, I., Herbst, P. (2020). <em>Who Benefits from Mathematics Courses for Teachers? An Analysis of MKT-G Growth During Geometry for Teachers Courses.</em> American Education Research Association. San Francisco, CA.</li>
+</ul>
 
-<h3>Posters</h3>
-<li>Boyce, B., <strong>Ion, M.</strong> (Oct. 2023). <i> Geometry Students' Ways of Thinking About Adinkra Symbols. Psychology of Mathematics Education, North America Annual Conference. </i> Reno, NV.</li> 
-<li>Danai, A., Quimper Osores, A., <strong>Ion, M.</strong>, Herbst, P. (Apr. 2023). <i> Analysis of Citation Networks of Submitted Manuscripts in Mathematics Education. Undergraduate Research Opportunity Program (UROP) Symposium. </i> Ann Arbor, MI. `Blue Ribbon Outstanding Presenter Award'</li> 
-<li>Beckemeyer, R., Brown, A., <strong>Ion, M.</strong>, Spiteri, A., Herbst, P. (Apr. 2022). <i> How Experience and Knowledge Affect the Breaching Patterns of Secondary Mathematics Teachers. Undergraduate Research Opportunity Program (UROP) Symposium.  </i> Ann Arbor, MI. `Blue Ribbon Outstanding Presenter Award'. </li>
-<li><strong>Ion, M.</strong>, Bardelli, E., Herbst, P. (Oct. 2018). <i> Learning About the Norms of Teaching Practice: How Can Machine Learning Help Analyze Teachers' Reactions to Scenarios? Michigan Institute for Data Science Annual Symposium. </i> Ann Arbor, MI. Awarded 'Most Likely Scientific Impact'. </li>
-</ol>
+<h3>2019</h3>
+<ul>
+<li><strong>Ion, M.</strong>, Herbst, P., Margolis, C., Milewski, A., Ko, I. (2019). <em>Developing Practical Measures to Support the Improvement of Geometry for Teachers Courses.</em> Psychology of Mathematics Education, North America Annual Conference. St. Louis, MO.</li>
+<li>Milewski, A., <strong>Ion, M.</strong>, Herbst, P., Shultz, M., Ko, I., Bleecker, H. (2019). <em>Tensions in Teaching Mathematics to Future Teachers: Understanding the Practice of Undergraduate Mathematics Instructors.</em> American Education Research Association Conference. Toronto, Canada.</li>
+</ul>
+
+<h3>2018</h3>
+<ul>
+<li>Herbst, P., Milewski, A., <strong>Ion, M.</strong>, Bleecker, H. (2018). <em>What Influences Do Instructors of the Geometry for Teachers Course Need to Contend With?</em> Psychology of Mathematics Education, North America. Greenville, SC.</li>
+</ul>
+
+<h3>In Progress</h3>
+<ul>
+<li>Paulsen, A., Godfrey, J., <strong>Ion, M.</strong> (In progress). <em>Writing Across the Curriculum: A Text-as-Data Approach.</em> Target: American Educational Research Journal.</li>
+</ul>
+
+<h3>Selected Talks and Posters</h3>
+<ul>
+<li><strong>Ion, M.</strong> (2026). <em>Structured Outputs from LLMs: Prompting vs. Fine-Tuning on Free Colab.</em> Infinicon. San Luis Obispo, CA. <a href="https://colab.research.google.com/drive/1WVyyTRVHiZJV2LyHE8AtH3KjQJIPk0wd?usp=sharing">[notebook]</a></li>
+<li><strong>Ion, M.</strong> (2025). <em>Bayesian Hierarchical Modeling of Large-Scale Math Tutoring Dialogues.</em> Joint Statistical Meetings 2025. Nashville, TN.</li>
+<li><strong>Ion, M.</strong> (2025). <em>Text-as-Data in Mathematics Education: Harnessing LLMs to Analyze Student Conversations at Scale.</em> Joint Mathematics Meetings 2025. Seattle, WA.</li>
+<li>Wang, T., <strong>Ion, M.</strong>, Asthana, S., Jiao, F., Collins-Thompson, K. (2025). <em>The Fidelity of LLM Classifiers in Analyzing Mathematics Teaching and Learning Conversations.</em> Undergraduate Research Opportunity Program (UROP) Symposium, Ann Arbor, MI. <em>Blue Ribbon Outstanding Presenter Award.</em></li>
+<li>Boyce, B., <strong>Ion, M.</strong> (2023). <em>Geometry Students' Ways of Thinking About Adinkra Symbols.</em> Psychology of Mathematics Education, North America Annual Conference. Reno, NV. Poster.</li>
+<li>Danai, A., Quimper Osores, A., <strong>Ion, M.</strong>, Herbst, P. (2023). <em>Analysis of Citation Networks of Submitted Manuscripts in Mathematics Education.</em> UROP Symposium, Ann Arbor, MI. <em>Blue Ribbon Outstanding Presenter Award.</em></li>
+<li>Beckemeyer, R., Brown, A., <strong>Ion, M.</strong>, Spiteri, A., Herbst, P. (2022). <em>How Experience and Knowledge Affect the Breaching Patterns of Secondary Mathematics Teachers.</em> UROP Symposium, Ann Arbor, MI. <em>Blue Ribbon Outstanding Presenter Award.</em></li>
+<li>Paulsen, A., <strong>Ion, M.</strong>, Godfrey, J. (2022). <em>Writing Across the Curriculum: A Text-as-Data Approach.</em> Causal Inference in Education Research Seminar. Ann Arbor, MI.</li>
+<li>Herbst, P., Stevens, I., Milewski, A., <strong>Ion, M.</strong>, Ko, I. (2020). <em>State of Undergraduate Geometry Courses for Secondary Teachers.</em> Joint Mathematics Meeting. Denver, CO.</li>
+<li><strong>Ion, M.</strong>, Bardelli, E., Herbst, P. (2018). <em>Learning About the Norms of Teaching Practice: How Can Machine Learning Help Analyze Teachers' Reactions to Scenarios?</em> Michigan Institute for Data Science Annual Symposium. <em>Awarded 'Most Likely Scientific Impact'.</em></li>
+</ul>
 
 </div>
-
-
-[Link to full CV](/assets/docs/cv-ion-sept-2024.pdf)

@@ -1,57 +1,63 @@
 ---
-# You don't need to edit this file, it's empty on purpose.
-# Edit theme's home layout instead if you wanna make some changes
-# See: https://jekyllrb.com/docs/themes/#overriding-theme-defaults
-layout: home
-author_profile: true
+layout: default
 ---
 
+<section class="hero">
+  <h1>Mike Ion</h1>
+  <div class="role">Postdoctoral Research Fellow · University of Michigan School of Information</div>
+  <p>I develop statistical methods for evaluating language models — measuring the fidelity of their outputs, diagnosing where common evaluation metrics fail, and characterizing how fine-tuning deforms output distributions. My work sits at the intersection of measurement theory and statistical ML, with applications in education and conversational AI.</p>
+  <p class="hero-links"><a href="{{ '/about/' | relative_url }}">more about me →</a></p>
+</section>
 
+<h2>Research</h2>
+<ol class="threads">
+  <li><strong>Evaluation of LLM output distributions.</strong> Per-prompt similarity metrics (cosine, BERTScore) can systematically misrank instruction-tuned models. Instruction tuning shifts the <em>center</em> of the output distribution while preserving its <em>spread</em>; cosine tracks the spread and misses the shift. The blind spot has direct implications for training-data filtering pipelines.</li>
+  <li><strong>Fidelity of synthetic conversational data.</strong> Adapting propensity-score MSE from tabular synthetic data to conversations, with L1-regularized classifiers that yield per-feature diagnostics and dimensional decomposition. Practitioners get not just a quality score but a directive on what to fix next.</li>
+  <li><strong>Statistical representations of dialogue.</strong> Feature pipelines that map variable-length conversations to fixed-dimensional vectors capturing surface patterns and cognitive dynamics, built on MathMentorDB.</li>
+</ol>
 
-<h1>Welcome to My Website</h1>
+<h2>Selected Papers</h2>
 
-<p>I am a postdoctoral research fellow in AI and Education in the School of Information at the University of Michigan. My research interests include large language models as a tool for educational research, simulated student (and teacher) modeling, optimal practice scheduling, and ML-assisted methods for analyzing learning interaction data.</p>
+<div class="paper">
+  <div class="venue">NeurIPS 2026 · in preparation</div>
+  <span class="title">The Evaluation Blind Spot: Per-Prompt Similarity Can Systematically Misrank Instruction-Tuned Text Distributions</span>
+  <p class="blurb">Across 8,290 paired human and model continuations, cosine similarity ranks instruction-tuned models as most human-like in 5 of 6 genres, while kernel MMD² ranks those same models as least human-like. A 67-feature linguistic decomposition explains the disagreement: instruction tuning shifts the distribution's center without changing its spread. Per-prompt similarity is insensitive to the shift; population-level distance responds to both.</p>
+  <div class="meta">Ion, M. &amp; Godfrey, J. · 2026</div>
+</div>
 
-<h2 class="recent-news-heading">Recent News</h2>
-<ul class="news-list">
-  <li>
-    <span class="news-date">October 2024</span>
-    <span class="news-content">Started my postdoctoral position at University of Michigan School of Information!</span>
-  </li>
-  <li>
-    <span class="news-date">September 2024</span>
-    <span class="news-content">
-      Talk accepted at JMM 2025 in Seattle, WA, titled: 
-      <a href="https://meetings.ams.org/math/jmm2025/meetingapp.cgi/Paper/45743" target="_blank">
-        "Text-as-Data in Mathematics Education: Harnessing LLMs to Analyze Student Conversations at Scale"
-      </a>
-    </span>
-  </li>
-  <li>
-    <span class="news-date">April 2024</span>
-    <span class="news-content">Successfully defended my PhD thesis on studying mathematical conversations at scale using large language models.</span>
-  </li>
+<div class="paper">
+  <div class="venue">ACM Learning@Scale 2026 · accepted (22%)</div>
+  <span class="title">Measuring Simulation Fidelity via Statistical Detectability: A Diagnostic Framework for AI-Generated Tutoring Conversations</span>
+  <p class="blurb">A propensity-score MSE framework for assessing whether LLM-generated conversations match the distribution of real ones. L1-regularized classifiers on interpretable feature subsets reveal that surface and cognitive fidelity are coupled: improving one without attending to the other can worsen overall fidelity. The framework turns a scalar quality score into a diagnostic for iterative prompt refinement.</p>
+  <div class="meta">Ion, M. &amp; Collins-Thompson, K. · 2026</div>
+</div>
+
+<div class="paper">
+  <div class="venue">AIED 2026 · accepted (Late-Breaking Results poster, 29%)</div>
+  <span class="title">From Moves to Pathways: Characterizing Pedagogical Discourse Dynamics in Online Tutoring with Bayesian Generative Modeling</span>
+  <p class="blurb">A hierarchical Bayesian Hidden Markov Model fit to 2,437 math tutoring conversations (51k+ messages) from MathMentorDB, using LLM-classified discourse moves. Four latent pedagogical states emerge unsupervised (Problem Introduction, Exploration, Lecturing, Working). Resolved and unresolved sessions differ less in what tutors say than in whether students are actively attempting inference — replicating impasse-driven learning findings at two orders of magnitude greater scale than prior manually-annotated studies.</p>
+  <div class="meta">Light, M., Ion, M. &amp; Collins-Thompson, K. · 2026</div>
+</div>
+
+<div class="paper">
+  <div class="venue">ACM Learning@Scale 2026 · demo</div>
+  <span class="title">A Fidelity Diagnostic Workbench for Synthetic Tutoring Conversations</span>
+  <p class="blurb">Interactive tool operationalizing the pMSE framework above. Traces a synthetic conversation from generation prompt through feature extraction to L1 coefficients, with side-by-side real/synthetic contrast and a scorecard exposing the surface–cognitive coupling directly.</p>
+  <div class="meta">Ion, M. &amp; Collins-Thompson, K. · 2026</div>
+</div>
+
+<p style="margin-top:1.5rem;"><a href="{{ '/publications/' | relative_url }}">Full publication list →</a></p>
+
+<h2>News</h2>
+<ul class="news">
+  <li><span class="date">Apr 2026</span><span><em>Measuring Simulation Fidelity via Statistical Detectability</em> (with Kevyn Collins-Thompson) accepted to <a href="https://learningatscale.acm.org/">ACM Learning@Scale 2026</a> (Seoul, July 2026) at 22% — a propensity-score MSE diagnostic for whether LLM-generated tutoring conversations match the distribution of real ones, showing surface and cognitive fidelity are coupled.</span></li>
+  <li><span class="date">Apr 2026</span><span><em>From Moves to Pathways</em> (with Michael Light and Kevyn Collins-Thompson) accepted to AIED 2026 (Late-Breaking Results poster track, 29%) — a hierarchical Bayesian HMM over 2,437 math tutoring conversations recovers four latent pedagogical states unsupervised; resolved and unresolved sessions differ less in what tutors say than in whether students are actively attempting inference.</span></li>
+  <li><span class="date">Mar 2026</span><span>Talk at Infinicon (San Luis Obispo): a walkthrough of getting LLMs to return structured outputs — typical prompting approaches for specific fields and categories, then fine-tuning an open-weight model on a free Colab instance and comparing the two. <a href="https://colab.research.google.com/drive/1WVyyTRVHiZJV2LyHE8AtH3KjQJIPk0wd?usp=sharing">[notebook]</a></span></li>
+  <li><span class="date">Oct 2025</span><span>Preprint <em>Chip-Firing and the Sandpile Group of the R10 Matroid</em> posted on <a href="https://arxiv.org/abs/2510.26021">arXiv</a> (with <a href="https://sites.google.com/view/alexmcdonough/home">Alex McDonough</a>) and since submitted to Galois Journal of Algebra — a description of chip-firing on R10 using complex numbers and representatives for the 162 equivalence classes of its sandpile group.</span></li>
+  <li><span class="date">Sep 2025</span><span>Started as Lecturer in the Statistics Department at California Polytechnic State University, San Luis Obispo.</span></li>
+  <li><span class="date">Aug 2025</span><span>Talk at <a href="https://ww2.amstat.org/meetings/jsm/2025/">JSM 2025</a> (Nashville): <em>Bayesian Hierarchical Modeling of Large-Scale Math Tutoring Dialogues</em> — a Bayesian framework for analyzing cognitive load in math tutoring, applied to MathMentorDB's 5.4M messages across 200K+ conversations.</span></li>
+  <li><span class="date">Feb 2025</span><span>Awarded $12,435 from the Academic Innovation Fund to develop AI-powered technical-interview practice tools for data science students.</span></li>
+  <li><span class="date">Jan 2025</span><span>Talk at <a href="https://meetings.ams.org/math/jmm2025/meetingapp.cgi/Paper/45743">JMM 2025</a> (Seattle): <em>Text-as-Data in Mathematics Education: Harnessing LLMs to Analyze Student Conversations at Scale</em>.</span></li>
+  <li><span class="date">Sep 2024</span><span>Started as postdoctoral fellow at the University of Michigan School of Information.</span></li>
+  <li><span class="date">Mar 2024</span><span>Defended my PhD at the University of Michigan — <em><a href="https://deepblue.lib.umich.edu/bitstream/handle/2027.42/193265/mikeion_1.pdf?sequence=1">Beyond the Classroom: Exploring Mathematics Engagement in Online Communities with Natural Language Processing</a></em>.</span></li>
 </ul>
-
-<style>
-  .news-list {
-    list-style-type: none;
-    padding-left: 0;
-  }
-  .news-list li {
-    margin-bottom: 15px;
-  }
-  .news-date {
-    display: inline-block;
-    min-width: 120px;
-    font-weight: bold;
-    color: #555;
-  }
-  .news-content {
-    display: inline-block;
-  }
-  .recent-news-heading {
-    margin-top: 20px;
-    margin-bottom: 15px;
-  }
-</style>

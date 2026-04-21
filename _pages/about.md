@@ -1,13 +1,25 @@
 ---
-permalink: /about/
+layout: default
 title: "About"
+permalink: /about/
 ---
 
-# Mike Ion
+<section class="about">
 
-**Mathematics, Data Science, Statistics, AI**
+<img src="{{ '/assets/images/headshot.avif' | relative_url }}" alt="Mike Ion" class="headshot">
 
-# About Me
+<h1>About</h1>
 
- I'm Dr. Mike Ion, a lifelong learner and educator dedicated to developing systematic ways to improve instruction. I recently completed my Ph.D. in Mathematics Education at the University of Michigan. My academic journey began with bachelor's and master's degrees in mathematics from California Polytechnic State University, San Luis Obispo. My dissertation, *Beyond the Classroom: Exploring Mathematics Engagement in Online Communities with Natural Language Processing*, showcases some of my work investigating the phenomenon of online mathematics learning taking place in chat-based platforms by creating and analyzing MathConverse, a novel dataset of 200,000 structured conversations from tutors and students working together on mathematics problems. This work has resulted in several peer-reviewed journal articles and conference proceedings, including contributions to the International Journal of Research in Undergraduate Mathematics Education and presentations at major conferences such as the Psychology of Mathematics Education, North America Annual Conference. I have taught for over 15 years in a wide array of subject areas and ages, ranging from mathematics courses at California Polytechnic State University to statistics at the University of Michigan, as well as international teaching experiences with middle- and high-school students in Hong Kong and Botswana. I am committed to enhancing diverse educational environments to reach students from all backgrounds and aim to advance STEM education through innovative pedagogical practices.
+<p>I'm Mike. I study how to tell whether a language model is actually doing what we want it to — particularly in the learning contexts I know best. Right now that means measuring how close synthetic tutoring conversations come to real ones, and showing where off-the-shelf similarity metrics can systematically mislead.</p>
 
+<p>I'm a Postdoctoral Research Fellow at the University of Michigan School of Information, working with <a href="https://websites.umich.edu/~kevynct/">Kevyn Collins-Thompson</a>. My PhD was at Michigan too, with <a href="https://deborahloewenbergball.com/">Deborah Ball</a>. I came to AI evaluation through education research — measurement theory and discourse analysis — rather than the other way around, and my work now sits at that intersection.</p>
+
+<p>Before the PhD I did a BS and MS in mathematics at Cal Poly, taught high school math, and spent two years as a Peace Corps volunteer in Botswana.</p>
+
+<p>I live in San Luis Obispo with my wife and our goldendoodle. Outside of research I play guitar and ukulele, make music in the evenings, hike whenever the chance comes up, and play Super Smash Bros. Melee.</p>
+
+<h2>Get in touch</h2>
+
+<p>I take on a handful of consulting and research-collaboration projects each year. Best entry point is email: <a href="mailto:mikeion@umich.edu">mikeion@umich.edu</a>.</p>
+
+</section>

@@ -211,6 +211,26 @@ hr {
   font-size: 0.95rem;
   line-height: 1.5;
 }
+.paper-summary {
+  margin-top: 0.35rem;
+}
+.paper-summary > summary {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-block;
+  user-select: none;
+}
+.paper-summary > summary:hover { color: var(--link); }
+.paper-summary[open] > summary { margin-bottom: 0.35rem; }
+.paper-summary .blurb {
+  color: #333;
+  font-size: 0.92rem;
+  margin: 0 0 0.2rem 0;
+}
 
 /* Publication type tags */
 .tag {

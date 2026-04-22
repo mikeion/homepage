@@ -1,0 +1,53 @@
+name: Fetch paper abstracts
+
+# Outbound HTTP isn't available from the local/web Jekyll dev sandbox, so this
+# workflow runs on GitHub's runner to fetch abstracts listed in
+# _data/papers.yml and commits the result to _data/paper_abstracts.yml on the
+# same branch. Trigger manually from the Actions tab.
+
+on:
+  workflow_dispatch:
+    inputs:
+      rerun:
+        description: "Re-fetch even papers that already have a successful entry"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
+
+      - name: Install Python dependencies
+        run: pip install pyyaml
+
+      - name: Fetch abstracts
+        run: |
+          if [ "${{ inputs.rerun }}" = "true" ]; then
+            python scripts/fetch_abstracts.py --rerun
+          else
+            python scripts/fetch_abstracts.py
+          fi
+
+      - name: Commit results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet _data/paper_abstracts.yml 2>/dev/null && ! git ls-files --others --error-unmatch _data/paper_abstracts.yml > /dev/null 2>&1; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git add _data/paper_abstracts.yml
+          git commit -m "chore(data): refresh paper abstracts"
+          git push

@@ -7,19 +7,20 @@ layout: default
   <div class="hero-text">
     <h1>Mike Ion</h1>
     <div class="role">Postdoctoral Research Fellow · University of Michigan School of Information</div>
-    <p>I study how to tell when a language model is actually doing what we asked it to, and where common evaluation metrics quietly fail. My work lives at the intersection of measurement theory and statistical ML, with applications in education and conversational AI.</p>
+    <p>I build statistical methods for human interaction data at scale: the infrastructure that organizes it, the features that make it analyzable, and the evaluation frameworks that tell us when the AI systems on top are doing what we asked them to.</p>
     <p class="hero-links"><a href="{{ '/about/' | relative_url }}">more about me →</a></p>
   </div>
 </section>
 
 <h2>Current research</h2>
 <ol class="threads">
-  <li><strong>Evaluation of LLM output distributions.</strong> Per-prompt similarity metrics (cosine, BERTScore) can systematically misrank instruction-tuned models. Instruction tuning shifts the <em>center</em> of the output distribution while preserving its <em>spread</em>; cosine tracks the spread and misses the shift. The blind spot has direct implications for training-data filtering pipelines.</li>
-  <li><strong>Fidelity of synthetic conversational data.</strong> Adapting propensity-score MSE from tabular synthetic data to conversations, with L1-regularized classifiers that yield per-feature diagnostics and dimensional decomposition. Practitioners get not just a quality score but a directive on what to fix next.</li>
-  <li><strong>Statistical representations of dialogue.</strong> Feature pipelines that map variable-length conversations to fixed-dimensional vectors capturing surface patterns and cognitive dynamics, built on MathMentorDB.</li>
+  <li><strong>Evaluation of LLM output distributions.</strong> Per-prompt similarity metrics (cosine, BERTScore) can systematically misrank instruction-tuned models: instruction tuning shifts the center of the output distribution while preserving its spread, and cosine tracks the spread and misses the shift. Direct implications for training-data filtering pipelines.</li>
+  <li><strong>Temporal structure in multi-party conversation.</strong> Lightweight single-pass features (burst coefficient, cluster density, response acceleration, interaction momentum, timing consistency) recover six conversational archetypes on MathMentorDB, with resolution rates ranging from above 90% to under 30%. Earlier Bayesian hierarchical Hawkes analysis presented at <a href="https://ww2.amstat.org/meetings/jsm/2025/">JSM 2025</a>.</li>
+  <li><strong>Discourse classification with LLMs.</strong> A 32-move pedagogical taxonomy labeled by three production LLMs across thousands of MathMentorDB messages. Inter-model agreement is high for coarse categories but diverges on fine-grained moves; discourse-move sequences predict whether conversations resolve or get abandoned.</li>
+  <li><strong>Conversational data infrastructure.</strong> MathMentorDB: 200,332 structured math-tutoring conversations reconstructed from 5.5M raw Discord messages via a disentanglement pipeline combining message timing, participant co-occurrence, and topic coherence. Submitted to LREC-COLING 2026 for public release.</li>
 </ol>
 
-<h2>Selected Papers</h2>
+<h2 id="selected-papers">Selected Papers</h2>
 
 <div class="paper">
   <div class="venue">in preparation</div>
@@ -42,14 +43,22 @@ layout: default
   <div class="meta">Light, M., Ion, M. &amp; Collins-Thompson, K. · 2026</div>
 </div>
 
-<div class="paper">
-  <div class="venue">ACM Learning@Scale 2026 · demo</div>
-  <span class="title">A Fidelity Diagnostic Workbench for Synthetic Tutoring Conversations</span>
-  <p class="blurb">Interactive tool operationalizing the pMSE framework above. Traces a synthetic conversation from generation prompt through feature extraction to L1 coefficients, with side-by-side real/synthetic contrast and a scorecard exposing the surface–cognitive coupling directly.</p>
-  <div class="meta">Ion, M. &amp; Collins-Thompson, K. · 2026</div>
-</div>
-
 <p style="margin-top:1.5rem;"><a href="{{ '/publications/' | relative_url }}">Full publication list →</a></p>
+
+<h2>Latest writing</h2>
+{% assign latest = site.posts | first %}
+{% if latest %}
+<ul class="blog-index">
+  <li>
+    <div class="post-meta">
+      <time datetime="{{ latest.date | date_to_xmlschema }}">{{ latest.date | date: "%b %-d, %Y" }}</time>{% if latest.tags and latest.tags.size > 0 %} · {% for tag in latest.tags %}<a class="wtag" href="{{ '/blog/tags/' | append: tag | append: '/' | relative_url }}">{{ tag }}</a>{% unless forloop.last %} {% endunless %}{% endfor %}{% endif %}
+    </div>
+    <a class="post-title" href="{{ latest.url | relative_url }}">{{ latest.title }}</a>
+    {% if latest.description %}<p class="post-excerpt">{{ latest.description }}</p>{% endif %}
+  </li>
+</ul>
+{% endif %}
+<p style="margin-top:0.8rem;"><a href="{{ '/blog/' | relative_url }}">All posts →</a></p>
 
 <h2>News</h2>
 <ul class="news">

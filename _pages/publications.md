@@ -8,7 +8,7 @@ permalink: /publications/
 
 <h3>2026</h3>
 <ul>
-<li><span class="tag tag-preprint">preprint</span> <strong>Ion, M.</strong>, Godfrey, J. (2026). <em>The Evaluation Blind Spot: Per-Prompt Similarity Can Systematically Misrank Instruction-Tuned Text Distributions.</em> In preparation, NeurIPS 2026.</li>
+<li><span class="tag tag-preprint">preprint</span> <strong>Ion, M.</strong>, Godfrey, J. (2026). <em>The Evaluation Blind Spot: Per-Prompt Similarity Can Systematically Misrank Instruction-Tuned Text Distributions.</em> In preparation.</li>
 <li><span class="tag tag-proceedings">proceedings</span> Light, M., <strong>Ion, M.</strong>, Collins-Thompson, K. (2026). <em>From Moves to Pathways: Characterizing Pedagogical Discourse Dynamics in Online Tutoring with Bayesian Generative Modeling.</em> 27th International Conference on Artificial Intelligence in Education (AIED '26), Late-Breaking Results (Posters) Track. Accepted, 29% acceptance rate.</li>
 <li><span class="tag tag-proceedings">proceedings</span> <strong>Ion, M.</strong>, Collins-Thompson, K. (2026). <em>Measuring Simulation Fidelity via Statistical Detectability: A Diagnostic Framework for AI-Generated Tutoring Conversations.</em> In Proceedings of the 13th ACM Conference on Learning @ Scale (L@S '26). ACM, New York, NY, USA, 11 pages. Accepted, 22% acceptance rate.</li>
 <li><span class="tag tag-demo">demo</span> <strong>Ion, M.</strong>, Collins-Thompson, K. (2026). <em>A Fidelity Diagnostic Workbench for Synthetic Tutoring Conversations.</em> ACM Conference on Learning @ Scale (L@S 2026), Demonstration Track.</li>

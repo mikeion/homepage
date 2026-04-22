@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>2&nbsp; Building Blocks – How a Transformer Learns Addition</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./03-assembly-training.html" rel="next">
+<link href="./01-the-problem.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-27c261d06b905028a18691de25d09dde.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./02-building-blocks.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Building Blocks</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">How a Transformer Learns Addition</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-the-problem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">The Problem</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-building-blocks.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Building Blocks</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-assembly-training.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Assembly and Training</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-looking-inside.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Looking Inside</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-breaking-things.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Breaking Things</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-two-tasks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Two Tasks, One Architecture</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-connections.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Connections</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#the-full-picture" id="toc-the-full-picture" class="nav-link active" data-scroll-target="#the-full-picture"><span class="header-section-number">2.1</span> The full picture</a>
+  <ul class="collapse">
+  <li><a href="#tracing-the-data-through" id="toc-tracing-the-data-through" class="nav-link" data-scroll-target="#tracing-the-data-through"><span class="header-section-number">2.1.1</span> Tracing the data through</a></li>
+  <li><a href="#counting-parameters" id="toc-counting-parameters" class="nav-link" data-scroll-target="#counting-parameters"><span class="header-section-number">2.1.2</span> Counting parameters</a></li>
+  <li><a href="#how-training-works" id="toc-how-training-works" class="nav-link" data-scroll-target="#how-training-works"><span class="header-section-number">2.1.3</span> How training works</a></li>
+  <li><a href="#what-d_model-means" id="toc-what-d_model-means" class="nav-link" data-scroll-target="#what-d_model-means"><span class="header-section-number">2.1.4</span> What <code>d_model</code> means</a></li>
+  </ul></li>
+  <li><a href="#token-embeddings" id="toc-token-embeddings" class="nav-link" data-scroll-target="#token-embeddings"><span class="header-section-number">2.2</span> Token embeddings</a></li>
+  <li><a href="#positional-encoding" id="toc-positional-encoding" class="nav-link" data-scroll-target="#positional-encoding"><span class="header-section-number">2.3</span> Positional encoding</a></li>
+  <li><a href="#attention-from-scratch" id="toc-attention-from-scratch" class="nav-link" data-scroll-target="#attention-from-scratch"><span class="header-section-number">2.4</span> Attention from scratch</a>
+  <ul class="collapse">
+  <li><a href="#step-1-project" id="toc-step-1-project" class="nav-link" data-scroll-target="#step-1-project"><span class="header-section-number">2.4.1</span> Step 1: Project</a></li>
+  <li><a href="#step-2-score" id="toc-step-2-score" class="nav-link" data-scroll-target="#step-2-score"><span class="header-section-number">2.4.2</span> Step 2: Score</a></li>
+  <li><a href="#step-3-mask-and-softmax" id="toc-step-3-mask-and-softmax" class="nav-link" data-scroll-target="#step-3-mask-and-softmax"><span class="header-section-number">2.4.3</span> Step 3: Mask and softmax</a></li>
+  <li><a href="#step-4-combine" id="toc-step-4-combine" class="nav-link" data-scroll-target="#step-4-combine"><span class="header-section-number">2.4.4</span> Step 4: Combine</a></li>
+  <li><a href="#what-ideal-attention-looks-like" id="toc-what-ideal-attention-looks-like" class="nav-link" data-scroll-target="#what-ideal-attention-looks-like"><span class="header-section-number">2.4.5</span> What ideal attention looks like</a></li>
+  <li><a href="#what-happens-without-the-mask" id="toc-what-happens-without-the-mask" class="nav-link" data-scroll-target="#what-happens-without-the-mask"><span class="header-section-number">2.4.6</span> What happens without the mask?</a></li>
+  </ul></li>
+  <li><a href="#feed-forward-network" id="toc-feed-forward-network" class="nav-link" data-scroll-target="#feed-forward-network"><span class="header-section-number">2.5</span> Feed-forward network</a></li>
+  <li><a href="#residual-connections-and-layer-normalization" id="toc-residual-connections-and-layer-normalization" class="nav-link" data-scroll-target="#residual-connections-and-layer-normalization"><span class="header-section-number">2.6</span> Residual connections and layer normalization</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Building Blocks</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Takeaway
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A transformer has five components, each with a specific job: <strong>embeddings</strong> map tokens to vectors, <strong>positions</strong> encode order, <strong>attention</strong> gathers information across positions, <strong>FFN</strong> computes on it, and <strong>residuals + layernorm</strong> keep the signal stable through layers.</p>
+</div>
+</div>
+<div id="9acb5648" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _common <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>&lt;torch._C.Generator at 0x12000eed0&gt;</code></pre>
+</div>
+</div>
+<section id="the-full-picture" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="the-full-picture"><span class="header-section-number">2.1</span> The full picture</h2>
+<p>Here’s what we’re doing in this chapter: we’re going to build a neural network piece by piece, from the ground up. The input is a sequence of token IDs (integers like <code>[1, 2, 3, 10, 4, 5, 6, 11]</code> representing <code>123+456=</code>), and the output is a prediction: what token comes next? The network has no built-in knowledge of addition — it’s just matrices of random numbers that we’ll train to produce correct answers.</p>
+<p>Before diving into each component, it helps to see the full pipeline and what job each piece does. The point of these two diagrams is: <strong>a transformer is a sequence of simple operations, and each one has one job.</strong></p>
+<div class="cell" data-fig-width="6" data-layout-align="default">
+<div class="cell-output-display">
+<div id="fig-overview" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-overview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div>
+<pre class="mermaid mermaid-js" data-label="fig-overview">flowchart TD
+    A["Input: token IDs"] --&gt; B["Token Embedding&lt;br/&gt;14 × 32 = 448 params"]
+    A --&gt; C["Position Embedding&lt;br/&gt;13 × 32 = 416 params"]
+    B --&gt; D["Add token + position vectors"]
+    C --&gt; D
+    D --&gt; E["Transformer Block 1&lt;br/&gt;~8,400 params"]
+    E --&gt; F["Transformer Block 2&lt;br/&gt;~8,400 params"]
+    F --&gt; G["Final LayerNorm&lt;br/&gt;64 params"]
+    G --&gt; H["Linear Head&lt;br/&gt;tied to Token Embedding"]
+    H --&gt; I["Predicted next token"]
+
+    style B fill:#e1f0ff,stroke:#333
+    style C fill:#e1f0ff,stroke:#333
+    style E fill:#fff3e0,stroke:#333
+    style F fill:#fff3e0,stroke:#333
+    style H fill:#e1f0ff,stroke:#333
+</pre>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-overview-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.1: The forward pass: data flows top to bottom. Blue boxes contain trainable parameters (random at first, learned during training). Orange boxes are the transformer blocks we’ll open up below. Parameter counts shown for d_model=32.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Three things to notice in <a href="#fig-overview" class="quarto-xref">Figure&nbsp;<span>2.1</span></a>:</p>
+<ul>
+<li><strong>The input goes through two separate embedding lookups</strong> (token and position) that get added together. This means the model knows both <em>what</em> each token is and <em>where</em> it sits in the sequence. Without the position embedding, <code>123+456=</code> and <code>321+654=</code> would look identical.</li>
+<li><strong>There are two transformer blocks in series.</strong> Each one can do something different. In our addition model, block 1 will learn to align columns (find the right input digits), and block 2 will learn to propagate carries. More blocks = more sequential computation steps.</li>
+<li><strong>Every blue box is a matrix of trainable numbers.</strong> At initialization, these are random. Training adjusts them all simultaneously via gradient descent. The embeddings, the attention weights, and the output head are all learned the same way — there’s nothing special about how embeddings are trained.</li>
+</ul>
+<p>Now let’s open up the orange boxes. Each transformer block has the same internal structure:</p>
+<div class="cell" data-fig-width="6" data-layout-align="default">
+<div class="cell-output-display">
+<div id="fig-block" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-block-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div>
+<pre class="mermaid mermaid-js" data-label="fig-block">flowchart TD
+    X["Input from previous layer"] --&gt; LN1["LayerNorm&lt;br/&gt;64 params"]
+    LN1 --&gt; SA["Self-Attention&lt;br/&gt;W_Q: 32×32, W_K: 32×32&lt;br/&gt;W_V: 32×32, W_out: 32×32&lt;br/&gt;4,096 params"]
+    SA --&gt; ADD1["Add residual"]
+    X -.-&gt; ADD1
+    ADD1 --&gt; LN2["LayerNorm&lt;br/&gt;64 params"]
+    LN2 --&gt; FFN["Feed-Forward Network&lt;br/&gt;W_1: 32×64 + bias = 2,112&lt;br/&gt;W_2: 64×32 + bias = 2,080&lt;br/&gt;4,192 params"]
+    FFN --&gt; ADD2["Add residual"]
+    ADD1 -.-&gt; ADD2
+    ADD2 --&gt; OUT["Output to next layer"]
+
+    style SA fill:#e1f0ff,stroke:#333
+    style FFN fill:#fff3e0,stroke:#333
+</pre>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-block-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.2: Inside one transformer block. Attention (blue) gathers information across positions. The FFN (orange) computes on it. Dashed lines are residual connections. Parameter counts shown for d_model=32, d_ff=64.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The key division of labor in <a href="#fig-block" class="quarto-xref">Figure&nbsp;<span>2.2</span></a>:</p>
+<ul>
+<li><strong>Attention (blue) is the only place positions talk to each other.</strong> This is where the ones-digit output position <em>looks at</em> the ones-digit input positions and pulls in their values. Attention decides <em>which</em> information to gather.</li>
+<li><strong>The FFN (orange) processes each position independently.</strong> After attention has gathered the right input digits into one position, the FFN does the actual arithmetic: “3 + 6 = 9.” It never sees other positions — attention already delivered what it needs.</li>
+<li><strong>Residual connections (dashed lines) are safety nets.</strong> They add the input directly to the output, so if a sublayer learns nothing useful, the signal passes through unchanged. This makes deep networks trainable — without residuals, the signal degrades and gradients vanish after a few layers (we’ll demonstrate this below).</li>
+</ul>
+<section id="tracing-the-data-through" class="level3" data-number="2.1.1">
+<h3 data-number="2.1.1" class="anchored" data-anchor-id="tracing-the-data-through"><span class="header-section-number">2.1.1</span> Tracing the data through</h3>
+<p>Before counting parameters, let’s trace a concrete training example through the network. This clarifies what’s <strong>data</strong> flowing through versus what are <strong>coefficient matrices</strong> being learned — the analog of <span class="math inline">\(\beta\)</span> in regression.</p>
+<p><strong>During training, the model receives the complete 13-token sequence — input and answer — all at once:</strong></p>
+<pre><code>Position:  0  1  2  3  4  5  6  7  8  9  10  11  12
+Token:     1  2  3  +  4  5  6  =  9  7   5   0  &lt;EOS&gt;</code></pre>
+<p>At every position, the model’s job is: “predict the next token.” Positions 0–6 are just format learning (the model discovers that <code>+</code> always follows three digits, <code>=</code> always follows six tokens). The real work is positions 7–11: predicting the reversed answer digits. All 12 predictions happen in a single forward pass.</p>
+<p>The data flows through a chain of matrix multiplications. Each <code>×</code> below is a multiplication by a <strong>trainable coefficient matrix</strong> — these are the numbers that gradient descent adjusts. Everything else (softmax, GELU, masking, addition) is a fixed operation with no parameters:</p>
+<pre><code>[13 token IDs]
+     × Embedding table (14×32)           ← trainable coefficients
+     + Position table (13×32)            ← trainable coefficients
+
+[13 × 32 matrix]    ← 13 positions, each a 32-dimensional vector
+     │
+     │  Block 1:
+     │    × W_Q, W_K, W_V (32×32 each)  ← trainable coefficients
+     │    score → mask → softmax         ← fixed (no parameters)
+     │    × W_out (32×32)                ← trainable coefficients
+     │    × W₁ (32×64), GELU, × W₂ (64×32)  ← trainable coefficients
+     │
+     │  Block 2: same structure, different coefficient matrices
+     │
+[13 × 32 matrix]    ← same shape — data enters and exits each block as (13, 32)
+     │
+     × Embedding tableᵀ (32×14)          ← reused from above (weight tying)
+
+[13 × 14 matrix]    ← 13 rows, each a score over the 14-token vocabulary</code></pre>
+<p>Row 7 of the output should assign high probability to <code>9</code> (the ones digit of 579). Row 8 should predict <code>7</code> (tens digit). The loss function compares all 12 predictions to the correct answers and tells every coefficient matrix which direction to adjust.</p>
+<p>Notice the shape stays (13, 32) throughout the middle of the network. Attention rearranges information <em>between</em> the 13 positions (via a 13×13 score matrix). The FFN transforms each of the 13 positions independently. Two different jobs, same input/output shape.</p>
+<p><strong>Where is the causal mask?</strong> Inside each block’s attention computation. After computing the 13×13 score matrix (<span class="math inline">\(Q \times K^T\)</span>), the mask sets the upper triangle to <span class="math inline">\(-\infty\)</span>. After softmax, <span class="math inline">\(e^{-\infty} = 0\)</span>, so position 8 gets zero information from positions 9–12. This means each position can only attend to itself and earlier positions — even though all 13 tokens are present in the input.</p>
+<p>This matters because after training, the model generates answers <strong>one token at a time</strong>: feed in <code>123+456=</code> (8 tokens), predict position 8, append it, predict position 9, and so on. The mask ensures the model practices under the same constraint during training that it faces during generation.</p>
+</section>
+<section id="counting-parameters" class="level3" data-number="2.1.2">
+<h3 data-number="2.1.2" class="anchored" data-anchor-id="counting-parameters"><span class="header-section-number">2.1.2</span> Counting parameters</h3>
+<p>Every trainable parameter is a single number that gradient descent will adjust. Let’s walk through each component in <a href="#fig-overview" class="quarto-xref">Figure&nbsp;<span>2.1</span></a> and <a href="#fig-block" class="quarto-xref">Figure&nbsp;<span>2.2</span></a> to see where the model’s 17,760 parameters come from.</p>
+<p><strong>Token embedding (448 params).</strong> A lookup table with one row per <em>vocabulary item</em>, one column per dimension. We have 14 tokens in our vocabulary (digits 0–9, <code>+</code>, <code>=</code>, <code>&lt;PAD&gt;</code>, <code>&lt;EOS&gt;</code>) and <code>d_model=32</code>, so it’s a 14 × 32 matrix = 448 numbers. When the model sees token ID <code>3</code>, it retrieves row 3 — a vector of 32 numbers. The number of rows is the vocabulary size.</p>
+<p><strong>Position embedding (416 params).</strong> A separate lookup table with one row per <em>position in the sequence</em>. Our sequences are 13 tokens long (<code>aaa+bbb=ssss&lt;EOS&gt;</code>), so it’s a 13 × 32 matrix = 416 numbers. Position 0 gets one vector, position 12 gets a different vector. The number of rows is the sequence length, not the vocabulary size — that’s why it’s 13 × 32 instead of 14 × 32. Token embedding answers “what is this token?”; position embedding answers “where is this token?”</p>
+<p><strong>Self-attention (4,096 params per block).</strong> Attention needs four weight matrices, each 32 × 32:</p>
+<ul>
+<li><span class="math inline">\(W_Q\)</span> (1,024): projects each token into a “query” — what am I looking for?</li>
+<li><span class="math inline">\(W_K\)</span> (1,024): projects each token into a “key” — what do I contain?</li>
+<li><span class="math inline">\(W_V\)</span> (1,024): projects each token into a “value” — what information do I carry?</li>
+<li><span class="math inline">\(W_{out}\)</span> (1,024): projects the attention output back to model dimension</li>
+</ul>
+<p>Total: 4 × 1,024 = 4,096 params. These are the matrices that determine <em>which</em> positions attend to <em>which</em> — the core of what makes a transformer work.</p>
+<p><strong>Feed-forward network (4,192 params per block).</strong> Two linear layers with biases:</p>
+<ul>
+<li><span class="math inline">\(W_1\)</span>: 32 × 64 + 64 bias = 2,112. This <em>expands</em> from <code>d_model</code> to <code>d_ff</code>, giving the model more “workspace” for computation.</li>
+<li><span class="math inline">\(W_2\)</span>: 64 × 32 + 32 bias = 2,080. This <em>compresses</em> back to <code>d_model</code>.</li>
+</ul>
+<p>Total: 4,192 params. Between <span class="math inline">\(W_1\)</span> and <span class="math inline">\(W_2\)</span> sits the GELU activation, which has no trainable parameters — it’s a fixed nonlinear function.</p>
+<p><strong>LayerNorm (64 params per norm).</strong> Two learnable parameters per dimension: a scale (<span class="math inline">\(\gamma\)</span>) and shift (<span class="math inline">\(\beta\)</span>), both vectors of length 32. That’s 64 params per LayerNorm. Each block has 2 norms = 128, plus one final norm = 64.</p>
+<p><strong>Linear head (0 extra params).</strong> The output head reuses the token embedding matrix (transposed). This is called <em>weight tying</em> — it means “the embedding for digit 3” and “the output pattern that predicts digit 3” are the same vector. No extra parameters.</p>
+<p><strong>Total:</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Component</th>
+<th style="text-align: right;">Params</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Token embedding</td>
+<td style="text-align: right;">448</td>
+</tr>
+<tr class="even">
+<td>Position embedding</td>
+<td style="text-align: right;">416</td>
+</tr>
+<tr class="odd">
+<td>Block 1: attention</td>
+<td style="text-align: right;">4,096</td>
+</tr>
+<tr class="even">
+<td>Block 1: FFN</td>
+<td style="text-align: right;">4,192</td>
+</tr>
+<tr class="odd">
+<td>Block 1: norms</td>
+<td style="text-align: right;">128</td>
+</tr>
+<tr class="even">
+<td>Block 2: attention</td>
+<td style="text-align: right;">4,096</td>
+</tr>
+<tr class="odd">
+<td>Block 2: FFN</td>
+<td style="text-align: right;">4,192</td>
+</tr>
+<tr class="even">
+<td>Block 2: norms</td>
+<td style="text-align: right;">128</td>
+</tr>
+<tr class="odd">
+<td>Final norm</td>
+<td style="text-align: right;">64</td>
+</tr>
+<tr class="even">
+<td>Linear head</td>
+<td style="text-align: right;">(tied)</td>
+</tr>
+<tr class="odd">
+<td><strong>Total</strong></td>
+<td style="text-align: right;"><strong>~17,760</strong></td>
+</tr>
+</tbody>
+</table>
+<p>That’s the entire model. Every one of these 17,760 numbers starts random and gets adjusted by gradient descent. On a laptop CPU, training takes under a minute. GPT-2 Small has 124 million parameters (7,000× more) — same components, bigger matrices.</p>
+</section>
+<section id="how-training-works" class="level3" data-number="2.1.3">
+<h3 data-number="2.1.3" class="anchored" data-anchor-id="how-training-works"><span class="header-section-number">2.1.3</span> How training works</h3>
+<p>Every trainable parameter — embeddings, attention projections (Q, K, V matrices), FFN weights, the output head — starts as random numbers. The model begins knowing nothing about addition.</p>
+<p><strong>Forward pass.</strong> Input tokens flow top-to-bottom through <a href="#fig-overview" class="quarto-xref">Figure&nbsp;<span>2.1</span></a>. Each token ID gets looked up in the embedding table, combined with its position, processed through the two transformer blocks, and projected to a probability distribution over the 14-token vocabulary. The highest-probability token is the model’s prediction.</p>
+<p><strong>Loss.</strong> Cross-entropy loss measures how wrong the prediction is. At initialization, the model assigns roughly equal probability to all 14 tokens, so loss starts around <span class="math inline">\(-\log(1/14) \approx 2.6\)</span>.</p>
+<p><strong>Backward pass (gradient descent).</strong> Gradients flow backward through every arrow in both diagrams, computing “how should each parameter change to reduce the loss?” This includes the embedding tables — the gradient tells each embedding vector which direction to shift. Embeddings are learned from data exactly like every other weight matrix; there is nothing hand-designed about them.</p>
+<p><strong>Update.</strong> The optimizer (AdamW) nudges every parameter in the direction that reduces loss. One forward-backward-update cycle is one training step. After thousands of steps, the random initial weights converge to values that implement an addition algorithm.</p>
+<p>The key insight: all parameters update simultaneously on every step. The model discovers how to <em>use</em> each component by finding weight configurations where embeddings, attention, FFN, and the output head work together.</p>
+<hr>
+</section>
+<section id="what-d_model-means" class="level3" data-number="2.1.4">
+<h3 data-number="2.1.4" class="anchored" data-anchor-id="what-d_model-means"><span class="header-section-number">2.1.4</span> What <code>d_model</code> means</h3>
+<p>Every token in the transformer is represented as a vector of numbers. <code>d_model</code> is the length of that vector — it’s how many numbers the model uses to describe each token at each position.</p>
+<p>With <code>d_model=32</code>, the digit <code>3</code> isn’t a single number — it’s a list of 32 numbers like <code>[0.12, -0.45, 0.78, ...]</code>. The model packs everything it knows about a token into this vector: its numeric value, its role in the sequence, information gathered from other positions. All computation in the transformer — attention scores, FFN transformations, the final prediction — operates on these 32-dimensional vectors.</p>
+<p>Why 32 and not 2 or 1000? It’s a capacity knob. Too small and there aren’t enough dimensions to encode the distinctions the model needs (ones digit vs.&nbsp;hundreds digit, carry vs.&nbsp;no carry). Too large and you waste parameters on dimensions the model doesn’t use. For 3-digit addition, 32 is enough. GPT-2 uses 768; Llama 3 8B uses 4,096 — they need more dimensions because natural language has far more distinctions to encode.</p>
+<p>In this chapter, we’ll use <code>d_model=8</code> so we can print every value and see what’s happening. The real model uses <code>d_model=32</code>; the mechanics are identical, just with longer vectors.</p>
+</section>
+</section>
+<section id="token-embeddings" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="token-embeddings"><span class="header-section-number">2.2</span> Token embeddings</h2>
+<p>An embedding is a lookup table: token ID in, vector out.</p>
+<div id="5f083b22" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>d_model_demo <span class="op">=</span> <span class="dv">8</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>demo_emb <span class="op">=</span> nn.Embedding(VOCAB_SIZE, d_model_demo)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>tokens <span class="op">=</span> torch.tensor([<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">11</span>])</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>embedded <span class="op">=</span> demo_emb(tokens)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Token embeddings (before training):"</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, t <span class="kw">in</span> <span class="bu">enumerate</span>(tokens.tolist()):</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    vec <span class="op">=</span> embedded[i].detach().numpy()</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  '</span><span class="sc">{</span>VOCAB_INV[t]<span class="sc">}</span><span class="ss">' (id=</span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">): [</span><span class="sc">{</span><span class="st">', '</span><span class="sc">.</span>join(<span class="ss">f'</span><span class="sc">{</span>v<span class="sc">:+.2f}</span><span class="ss">'</span> <span class="cf">for</span> v <span class="kw">in</span> vec)<span class="sc">}</span><span class="ss">]"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Token embeddings (before training):
+  '0' (id=0): [+1.93, +1.49, +0.90, -2.11, +0.68, -1.23, -0.04, -1.60]
+  '1' (id=1): [-0.75, +1.65, -0.39, -1.40, -0.73, -0.56, -0.77, +0.76]
+  '2' (id=2): [+1.64, -0.16, -0.50, +0.44, -0.76, +1.08, +0.80, +1.68]
+  '3' (id=3): [+1.28, +1.30, +0.61, +1.33, -0.23, +0.04, -0.25, +0.86]
+  '9' (id=9): [-0.17, +0.52, +0.06, +0.43, +0.58, -0.64, -2.21, -0.75]
+  '+' (id=10): [+0.01, -0.34, -1.34, -0.59, +0.54, +0.52, +1.14, +0.05]
+  '=' (id=11): [+0.74, -0.48, -1.05, +0.60, -1.72, -0.83, +1.33, +0.48]</code></pre>
+</div>
+</div>
+<p>Before training, these are random — we’re establishing a baseline to compare against Chapter 4, where training reshapes this space. The digit ‘3’ has no special relationship to ‘4’.</p>
+<div id="9c464f88" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>digit_embs <span class="op">=</span> demo_emb(torch.arange(<span class="dv">10</span>))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>norms <span class="op">=</span> digit_embs <span class="op">/</span> digit_embs.norm(dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>sim <span class="op">=</span> (norms <span class="op">@</span> norms.T).detach().numpy()</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">4</span>))</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>all_embs <span class="op">=</span> demo_emb.weight.detach().numpy()</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>im <span class="op">=</span> axes[<span class="dv">0</span>].imshow(all_embs, aspect<span class="op">=</span><span class="st">'auto'</span>, cmap<span class="op">=</span><span class="st">'RdBu_r'</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_yticks(<span class="bu">range</span>(VOCAB_SIZE))</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_yticklabels([VOCAB_INV[i] <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(VOCAB_SIZE)])</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_xlabel(<span class="st">'Embedding dimension'</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">'Token embedding vectors (random init)'</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>plt.colorbar(im, ax<span class="op">=</span>axes[<span class="dv">0</span>])</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>im2 <span class="op">=</span> axes[<span class="dv">1</span>].imshow(sim, cmap<span class="op">=</span><span class="st">'RdBu_r'</span>, vmin<span class="op">=-</span><span class="dv">1</span>, vmax<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_xticks(<span class="bu">range</span>(<span class="dv">10</span>))<span class="op">;</span> axes[<span class="dv">1</span>].set_yticks(<span class="bu">range</span>(<span class="dv">10</span>))</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_xticklabels(<span class="bu">range</span>(<span class="dv">10</span>))<span class="op">;</span> axes[<span class="dv">1</span>].set_yticklabels(<span class="bu">range</span>(<span class="dv">10</span>))</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">'Digit cosine similarity (random)'</span>)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>plt.colorbar(im2, ax<span class="op">=</span>axes[<span class="dv">1</span>])</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02-building-blocks_files/figure-html/cell-4-output-1.png" width="1123" height="374" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>No structure in the similarity matrix — all digit pairs are roughly equally similar. After training (Chapter 4), digits that play similar arithmetic roles will cluster: digits that frequently produce carries (8, 9) will separate from those that rarely do (0, 1).</p>
+</section>
+<section id="positional-encoding" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="positional-encoding"><span class="header-section-number">2.3</span> Positional encoding</h2>
+<p>Without position information, the model sees a <em>bag</em> of tokens — <code>123+456=</code> and <code>321+654=</code> would be indistinguishable.</p>
+<div id="7d907bd1" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>max_len <span class="op">=</span> <span class="dv">16</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>pos_emb <span class="op">=</span> nn.Embedding(max_len, d_model_demo)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>digit_5 <span class="op">=</span> demo_emb(torch.tensor([<span class="dv">5</span>])).squeeze()</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Same token '5' at different positions:"</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> pos <span class="kw">in</span> [<span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">7</span>]:</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    pos_vec <span class="op">=</span> pos_emb(torch.tensor([pos])).squeeze()</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    combined <span class="op">=</span> digit_5 <span class="op">+</span> pos_vec</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  Position </span><span class="sc">{</span>pos<span class="sc">}</span><span class="ss">: [</span><span class="sc">{</span><span class="st">', '</span><span class="sc">.</span>join(<span class="ss">f'</span><span class="sc">{</span>v<span class="sc">:+.2f}</span><span class="ss">'</span> <span class="cf">for</span> v <span class="kw">in</span> combined.detach().numpy())<span class="sc">}</span><span class="ss">]"</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Position 0 = hundreds digit of operand a."</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Position 4 = hundreds digit of operand b."</span>)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"The position embedding shifts the same token into different regions."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Same token '5' at different positions:
+  Position 0: [-3.01, +0.89, -1.48, -0.12, -0.55, +2.21, -1.62, +0.04]
+  Position 4: [-2.53, +1.95, +0.74, +0.85, -1.00, +1.91, -1.97, -0.38]
+  Position 7: [-3.16, +2.35, +0.41, -0.55, -2.82, +2.88, -0.46, +1.54]
+
+Position 0 = hundreds digit of operand a.
+Position 4 = hundreds digit of operand b.
+The position embedding shifts the same token into different regions.</code></pre>
+</div>
+</div>
+<p>Do positions with the same computational role start out nearby? For example, positions 0 and 4 both hold hundreds digits — we’d expect them to be similar after training, but at initialization they’re random.</p>
+<div id="f5837b32" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pos_vecs <span class="op">=</span> pos_emb.weight.detach()</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>pos_norms <span class="op">=</span> pos_vecs <span class="op">/</span> pos_vecs.norm(dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>pos_sim <span class="op">=</span> (pos_norms <span class="op">@</span> pos_norms.T).numpy()</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">5</span>))</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>im <span class="op">=</span> ax.imshow(pos_sim, cmap<span class="op">=</span><span class="st">'RdBu_r'</span>, vmin<span class="op">=-</span><span class="dv">1</span>, vmax<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Position'</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">'Position'</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Position embedding similarity (random init)'</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>plt.colorbar(im)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Adjacent positions aren't necessarily similar --- the model just needs them distinguishable."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02-building-blocks_files/figure-html/cell-6-output-1.png" width="559" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Adjacent positions aren't necessarily similar --- the model just needs them distinguishable.</code></pre>
+</div>
+</div>
+</section>
+<section id="attention-from-scratch" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="attention-from-scratch"><span class="header-section-number">2.4</span> Attention from scratch</h2>
+<p>Attention is the mechanism that lets each position <em>look at</em> other positions and decide what information to pull in. Think of it as a soft database lookup:</p>
+<ul>
+<li><strong>Query (Q):</strong> “What am I looking for?” Each position broadcasts a query describing what information it needs.</li>
+<li><strong>Key (K):</strong> “What do I contain?” Each position advertises what it offers.</li>
+<li><strong>Value (V):</strong> “Here’s my actual content.” The information that gets retrieved when a query matches a key.</li>
+</ul>
+<p>The dot product Q <span class="math inline">\(\cdot\)</span> K measures how well a query matches each key — high dot product means “this is relevant to me.” The result is a weighted average of values, where the weights come from those match scores.</p>
+<p>Why three separate projections instead of comparing raw embeddings? Because what a position <em>needs</em> (its query) is different from what it <em>offers</em> (its key). The ones-digit output position needs to find the ones-column inputs, but it offers carry information to the tens-digit. Three projections let each position play different roles as asker vs.&nbsp;answerer.</p>
+<p>Attention in 4 steps: <strong>project</strong> (make Q, K, V) <span class="math inline">\(\to\)</span> <strong>score</strong> (Q dot K) <span class="math inline">\(\to\)</span> <strong>mask</strong> (hide the future) <span class="math inline">\(\to\)</span> <strong>combine</strong> (weighted sum of V).</p>
+<section id="step-1-project" class="level3" data-number="2.4.1">
+<h3 data-number="2.4.1" class="anchored" data-anchor-id="step-1-project"><span class="header-section-number">2.4.1</span> Step 1: Project</h3>
+<div id="133b45d0" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>seq_tokens <span class="op">=</span> torch.tensor([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">10</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">11</span>])  <span class="co"># "123+456="</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>seq_emb <span class="op">=</span> demo_emb(seq_tokens) <span class="op">+</span> pos_emb(torch.arange(<span class="bu">len</span>(seq_tokens)))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>d_k <span class="op">=</span> d_model_demo</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>W_Q <span class="op">=</span> nn.Linear(d_model_demo, d_k, bias<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>W_K <span class="op">=</span> nn.Linear(d_model_demo, d_k, bias<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>W_V <span class="op">=</span> nn.Linear(d_model_demo, d_k, bias<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> W_Q(seq_emb)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> W_K(seq_emb)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>V <span class="op">=</span> W_V(seq_emb)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Input: '</span><span class="sc">{</span><span class="st">''</span><span class="sc">.</span>join(VOCAB_INV[t.item()] <span class="cf">for</span> t <span class="kw">in</span> seq_tokens)<span class="sc">}</span><span class="ss">'"</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Q, K, V shapes: </span><span class="sc">{</span>Q<span class="sc">.</span>shape<span class="sc">}</span><span class="ss"> each"</span>)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Q and K are the same shape --- they'll be compared via dot product."</span>)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"V is the content that gets retrieved based on those comparisons."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Input: '123+456='
+Q, K, V shapes: torch.Size([8, 8]) each
+
+Q and K are the same shape --- they'll be compared via dot product.
+V is the content that gets retrieved based on those comparisons.</code></pre>
+</div>
+</div>
+<p>Each of the 8 tokens gets projected into three different 8-dimensional vectors. The same input <code>seq_emb</code> goes through three different linear transformations, producing three different “views” of each token.</p>
+</section>
+<section id="step-2-score" class="level3" data-number="2.4.2">
+<h3 data-number="2.4.2" class="anchored" data-anchor-id="step-2-score"><span class="header-section-number">2.4.2</span> Step 2: Score</h3>
+<p><span class="math display">\[\text{score}(i, j) = \frac{Q_i \cdot K_j}{\sqrt{d_k}}\]</span></p>
+<p>Each position <span class="math inline">\(i\)</span> computes a dot product with every position <span class="math inline">\(j\)</span>. High score = “position <span class="math inline">\(j\)</span> has what position <span class="math inline">\(i\)</span> needs.” We divide by <span class="math inline">\(\sqrt{d_k}\)</span> to keep scores from growing too large — without this, softmax would push all weight onto a single position, and gradients would vanish.</p>
+<div id="35129707" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>scale <span class="op">=</span> d_k <span class="op">**</span> <span class="fl">0.5</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>raw_scores <span class="op">=</span> (Q <span class="op">@</span> K.T) <span class="op">/</span> scale</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> [VOCAB_INV[t.item()] <span class="cf">for</span> t <span class="kw">in</span> seq_tokens]</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">5</span>, <span class="dv">4</span>))</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>im <span class="op">=</span> ax.imshow(raw_scores.detach().numpy(), cmap<span class="op">=</span><span class="st">'Blues'</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>ax.set_xticks(<span class="bu">range</span>(<span class="bu">len</span>(labels)))<span class="op">;</span> ax.set_xticklabels(labels)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>ax.set_yticks(<span class="bu">range</span>(<span class="bu">len</span>(labels)))<span class="op">;</span> ax.set_yticklabels(labels)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Key (attending TO)'</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">'Query (attending FROM)'</span>)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Raw attention scores'</span>)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>plt.colorbar(im)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02-building-blocks_files/figure-html/cell-8-output-1.png" width="430" height="374" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>How to read this heatmap:</strong> Each <em>row</em> is one position’s query asking “how relevant is each other position to me?” A bright cell at row <span class="math inline">\(i\)</span>, column <span class="math inline">\(j\)</span> means “position <span class="math inline">\(i\)</span> wants to attend to position <span class="math inline">\(j\)</span>.” Right now these are random (untrained weights), but after training, the addition model will learn to make the ones-output row bright at the ones-input columns.</p>
+</section>
+<section id="step-3-mask-and-softmax" class="level3" data-number="2.4.3">
+<h3 data-number="2.4.3" class="anchored" data-anchor-id="step-3-mask-and-softmax"><span class="header-section-number">2.4.3</span> Step 3: Mask and softmax</h3>
+<p>The causal mask sets all “future” positions to <span class="math inline">\(-\infty\)</span> before softmax. Since <span class="math inline">\(e^{-\infty} = 0\)</span>, these positions get zero attention weight. This enforces autoregression: when the model predicts the ones digit, it can’t peek at the tens digit it hasn’t generated yet.</p>
+<p>After masking, softmax converts each row into a probability distribution (sums to 1). Each position distributes its attention budget across only the positions it’s allowed to see.</p>
+<div id="cba82eee" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>seq_len <span class="op">=</span> <span class="bu">len</span>(seq_tokens)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>causal_mask <span class="op">=</span> torch.triu(torch.ones(seq_len, seq_len), diagonal<span class="op">=</span><span class="dv">1</span>).<span class="bu">bool</span>()</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>masked_scores <span class="op">=</span> raw_scores.clone()</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>masked_scores[causal_mask] <span class="op">=</span> <span class="bu">float</span>(<span class="st">'-inf'</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>attn_weights <span class="op">=</span> F.softmax(masked_scores, dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="dv">4</span>))</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>display_masked <span class="op">=</span> masked_scores.detach().clone()</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>display_masked[causal_mask] <span class="op">=</span> <span class="bu">float</span>(<span class="st">'nan'</span>)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].imshow(display_masked.numpy(), cmap<span class="op">=</span><span class="st">'Blues'</span>)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">'After causal mask (white = -inf)'</span>)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_xticks(<span class="bu">range</span>(<span class="bu">len</span>(labels)))<span class="op">;</span> axes[<span class="dv">0</span>].set_xticklabels(labels)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_yticks(<span class="bu">range</span>(<span class="bu">len</span>(labels)))<span class="op">;</span> axes[<span class="dv">0</span>].set_yticklabels(labels)</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>im <span class="op">=</span> axes[<span class="dv">1</span>].imshow(attn_weights.detach().numpy(), cmap<span class="op">=</span><span class="st">'Blues'</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">'After softmax (attention weights)'</span>)</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_xticks(<span class="bu">range</span>(<span class="bu">len</span>(labels)))<span class="op">;</span> axes[<span class="dv">1</span>].set_xticklabels(labels)</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_yticks(<span class="bu">range</span>(<span class="bu">len</span>(labels)))<span class="op">;</span> axes[<span class="dv">1</span>].set_yticklabels(labels)</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>plt.colorbar(im, ax<span class="op">=</span>axes[<span class="dv">1</span>])</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax <span class="kw">in</span> axes:</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">'Key'</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">'Query'</span>)</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Left: the upper triangle is masked out (white = -inf)."</span>)</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Right: after softmax, each row sums to 1 --- a probability distribution over context."</span>)</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"The '=' sign (position 7) can see all input tokens but no output tokens."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02-building-blocks_files/figure-html/cell-9-output-1.png" width="948" height="374" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Left: the upper triangle is masked out (white = -inf).
+Right: after softmax, each row sums to 1 --- a probability distribution over context.
+The '=' sign (position 7) can see all input tokens but no output tokens.</code></pre>
+</div>
+</div>
+</section>
+<section id="step-4-combine" class="level3" data-number="2.4.4">
+<h3 data-number="2.4.4" class="anchored" data-anchor-id="step-4-combine"><span class="header-section-number">2.4.4</span> Step 4: Combine</h3>
+<p><span class="math display">\[\text{output}_i = \sum_j \text{attn\_weight}_{ij} \cdot V_j\]</span></p>
+<p>Each position’s output is a weighted average of all the value vectors, where the weights come from the attention scores. If position 8 (the ones-output digit) puts weight 0.5 on position 2 (ones of operand A) and 0.5 on position 6 (ones of operand B), then its output vector is the average of those two value vectors — exactly the information needed to compute the ones-digit sum.</p>
+<div id="1c849036" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>attn_output <span class="op">=</span> attn_weights <span class="op">@</span> V</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Output shape: </span><span class="sc">{</span>attn_output<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Each position is now a weighted average of the values it attended to."</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Position 7 ('=') attention distribution: </span><span class="sc">{</span>attn_weights[<span class="dv">7</span>]<span class="sc">.</span>detach()<span class="sc">.</span>numpy()<span class="sc">.</span><span class="bu">round</span>(<span class="dv">3</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  This tells us what '=' pays attention to --- ideally it would"</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  focus on the operands it needs for computing the first output digit."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Output shape: torch.Size([8, 8])
+Each position is now a weighted average of the values it attended to.
+
+Position 7 ('=') attention distribution: [0.096 0.164 0.297 0.199 0.027 0.087 0.034 0.096]
+  This tells us what '=' pays attention to --- ideally it would
+  focus on the operands it needs for computing the first output digit.</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Connection: Attention is kernel regression with a learned kernel
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The four-step procedure above has a name in classical statistics: it is <strong>Nadaraya–Watson kernel regression</strong>, with three modifications. Recall the Nadaraya–Watson estimator: to predict <span class="math inline">\(f\)</span> at a query point <span class="math inline">\(x\)</span>, take a weighted average of known values <span class="math inline">\(y_j\)</span>, where the weights come from a kernel measuring similarity between <span class="math inline">\(x\)</span> and each <span class="math inline">\(x_j\)</span>:</p>
+<p><span class="math display">\[\hat f(x) = \sum_j \frac{k(x, x_j)}{\sum_{j'} k(x, x_{j'})}\, y_j\]</span></p>
+<p>Self-attention is exactly this estimator, with the substitutions <span class="math inline">\(x \to h_i\)</span> (the current token’s representation), <span class="math inline">\(x_j \to h_j\)</span> (the other tokens), <span class="math inline">\(y_j \to W_V h_j\)</span> (a learned linear projection of each token’s value), and <span class="math inline">\(k(h_i, h_j) \to \exp(\langle W_Q h_i,\, W_K h_j\rangle / \sqrt{d_k})\)</span>. Stack the rows into matrices and the formula becomes <span class="math inline">\(\text{softmax}(QK^\top/\sqrt{d_k})\,V\)</span>. The output at position <span class="math inline">\(i\)</span> is a conditional expectation <span class="math inline">\(\mathbb{E}_{j \sim p(\cdot \mid i)}[W_V h_j]\)</span> under a probability distribution over positions induced by the kernel.</p>
+<p>Three things distinguish attention’s kernel from a textbook one. It is <strong>learned</strong>: the matrices <span class="math inline">\(W_Q, W_K\)</span> are fit by gradient descent against the task loss, not chosen by the modeler in advance. It is <strong>asymmetric</strong>: <span class="math inline">\(k(h_i, h_j) \neq k(h_j, h_i)\)</span> in general because <span class="math inline">\(W_Q \neq W_K\)</span>, so the kernel can express directed influence (the answer’s tens digit needs to attend to the ones digit, but not vice versa) — a generalization that classical Mercer kernels do not allow. And it is <strong>data-dependent</strong> in a layered sense: at layer <span class="math inline">\(\ell\)</span>, the kernel acts on representations <span class="math inline">\(h^{(\ell-1)}_i\)</span> that were themselves computed by previous layers from the specific input sequence, so the kernel’s <em>inputs</em> are dynamically constructed per example, even though its <em>parameters</em> are fixed after training.</p>
+<p>The practical payoff of this naming: every intuition you have about kernel smoothing transfers. The entropy of the row-wise distribution <span class="math inline">\(p(\cdot \mid i)\)</span> measures how concentrated each query’s lookup is (we use this in Chapter 4). The <span class="math inline">\(\sqrt{d_k}\)</span> scaling is a variance stabilizer for the induced measure, not a magic engineering constant: without it, the entropy of <span class="math inline">\(p(\cdot \mid i)\)</span> collapses toward zero as <span class="math inline">\(d_k\)</span> grows, making every query a hard one-hot lookup. And the learned, asymmetric kernel is the structural feature that lets attention do what no fixed kernel method can: discover task-specific, directed similarity from data.</p>
+</div>
+</div>
+</section>
+<section id="what-ideal-attention-looks-like" class="level3" data-number="2.4.5">
+<h3 data-number="2.4.5" class="anchored" data-anchor-id="what-ideal-attention-looks-like"><span class="header-section-number">2.4.5</span> What ideal attention looks like</h3>
+<p>Now we can see <em>why</em> attention matters for addition. With reversed output, position 8 (the first output digit, = ones place) should attend to the ones columns of both operands (positions 2 and 6). Position 9 (tens place) should attend to positions 1 and 5. The trained model needs to discover this column-alignment pattern through gradient descent.</p>
+<div id="93fef8e2" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>full_seq <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">10</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">11</span>, <span class="dv">9</span>, <span class="dv">7</span>, <span class="dv">5</span>, <span class="dv">0</span>, <span class="dv">13</span>]  <span class="co"># 123+456=9750&lt;EOS&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>full_labels <span class="op">=</span> [VOCAB_INV[t] <span class="cf">for</span> t <span class="kw">in</span> full_seq]</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">len</span>(full_seq)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>manual_attn <span class="op">=</span> torch.zeros(n, n)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">8</span>):</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    manual_attn[i, i] <span class="op">=</span> <span class="fl">1.0</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>manual_attn[<span class="dv">8</span>, <span class="dv">2</span>] <span class="op">=</span> <span class="fl">0.5</span><span class="op">;</span> manual_attn[<span class="dv">8</span>, <span class="dv">6</span>] <span class="op">=</span> <span class="fl">0.5</span>    <span class="co"># ones -&gt; ones</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>manual_attn[<span class="dv">9</span>, <span class="dv">1</span>] <span class="op">=</span> <span class="fl">0.5</span><span class="op">;</span> manual_attn[<span class="dv">9</span>, <span class="dv">5</span>] <span class="op">=</span> <span class="fl">0.5</span>    <span class="co"># tens -&gt; tens</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>manual_attn[<span class="dv">10</span>, <span class="dv">0</span>] <span class="op">=</span> <span class="fl">0.5</span><span class="op">;</span> manual_attn[<span class="dv">10</span>, <span class="dv">4</span>] <span class="op">=</span> <span class="fl">0.5</span>   <span class="co"># hundreds -&gt; hundreds</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>manual_attn[<span class="dv">11</span>, <span class="dv">0</span>] <span class="op">=</span> <span class="fl">0.5</span><span class="op">;</span> manual_attn[<span class="dv">11</span>, <span class="dv">4</span>] <span class="op">=</span> <span class="fl">0.5</span>   <span class="co"># thousands</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>manual_attn[<span class="dv">12</span>, :] <span class="op">=</span> <span class="fl">1.0</span> <span class="op">/</span> n</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="fl">5.5</span>))</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>im <span class="op">=</span> ax.imshow(manual_attn.numpy(), cmap<span class="op">=</span><span class="st">'Blues'</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>ax.set_xticks(<span class="bu">range</span>(n))<span class="op">;</span> ax.set_xticklabels(full_labels, fontsize<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>ax.set_yticks(<span class="bu">range</span>(n))<span class="op">;</span> ax.set_yticklabels(full_labels, fontsize<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Key'</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">'Query'</span>)</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Ideal attention for addition (reversed output)'</span>)</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>ax.axhline(y<span class="op">=</span><span class="fl">7.5</span>, color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>ax.axvline(x<span class="op">=</span><span class="fl">7.5</span>, color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>plt.colorbar(im)</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Each output digit attends to the matching input column."</span>)</span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Carries flow naturally: the model has already committed to lower digits."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02-building-blocks_files/figure-html/cell-11-output-1.png" width="612" height="517" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Each output digit attends to the matching input column.
+Carries flow naturally: the model has already committed to lower digits.</code></pre>
+</div>
+</div>
+</section>
+<section id="what-happens-without-the-mask" class="level3" data-number="2.4.6">
+<h3 data-number="2.4.6" class="anchored" data-anchor-id="what-happens-without-the-mask"><span class="header-section-number">2.4.6</span> What happens without the mask?</h3>
+<div id="8993908f" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>unmasked_weights <span class="op">=</span> F.softmax(raw_scores, dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="dv">4</span>))</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].imshow(attn_weights.detach().numpy(), cmap<span class="op">=</span><span class="st">'Blues'</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">'With causal mask (correct)'</span>)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].imshow(unmasked_weights.detach().numpy(), cmap<span class="op">=</span><span class="st">'Blues'</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">'Without causal mask (cheating)'</span>)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax <span class="kw">in</span> axes:</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    ax.set_xticks(<span class="bu">range</span>(<span class="bu">len</span>(labels)))<span class="op">;</span> ax.set_xticklabels(labels)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    ax.set_yticks(<span class="bu">range</span>(<span class="bu">len</span>(labels)))<span class="op">;</span> ax.set_yticklabels(labels)</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">'Key'</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">'Query'</span>)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Without the mask, the model sees future tokens during training"</span>)</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"but can't at generation time. Result: high train accuracy, low test accuracy."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02-building-blocks_files/figure-html/cell-12-output-1.png" width="854" height="374" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Without the mask, the model sees future tokens during training
+but can't at generation time. Result: high train accuracy, low test accuracy.</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Check your understanding
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p><strong>In the score matrix,</strong> what does a high value at row 8, column 2 mean for our addition problem? (Hint: what token is at position 8 in the output, and what token is at position 2 in the input?)</p></li>
+<li><p><strong>Why three projections (Q, K, V)</strong> instead of comparing embeddings directly? What would go wrong if we used the same representation for “what I need” and “what I offer”?</p></li>
+<li><p><strong>If we removed the <span class="math inline">\(\sqrt{d_k}\)</span> scaling,</strong> what would happen to softmax as <span class="math inline">\(d_k\)</span> grows? (Think about what softmax does when one input is much larger than the others, and how dot products scale with dimension.)</p></li>
+<li><p><strong>The FFN applies the same transformation independently at each position.</strong> Why doesn’t it need to see other positions? (Hint: what did attention already do to each position’s representation?)</p></li>
+</ol>
+</div>
+</div>
+</section>
+</section>
+<section id="feed-forward-network" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="feed-forward-network"><span class="header-section-number">2.5</span> Feed-forward network</h2>
+<p>Attention <em>gathers</em> information from other positions. The FFN <em>computes</em> on it, independently at each position.</p>
+<p>This is the division of labor: attention decides “the ones output needs to look at positions 2 and 6,” then the FFN takes that gathered information and computes “3 + 6 = 9.” Attention routes, the FFN transforms.</p>
+<p>The FFN has three steps:</p>
+<ol type="1">
+<li><strong>Expand</strong> (<span class="math inline">\(W_1\)</span>): multiply the 32-dimensional vector by a 32 × 64 matrix, producing a 64-dimensional vector. This is like giving the model a wider scratch pad — more dimensions to work with than the original representation.</li>
+<li><strong>Activate</strong> (GELU): apply a nonlinear function element-wise. GELU is smooth and approximately zeros out negative values. This is what makes the network <em>nonlinear</em> — without it, stacking linear layers would just produce another linear layer, and the model couldn’t learn anything more complex than a weighted sum. The activation lets different neurons “specialize”: some fire for carries, others for specific digit combinations.</li>
+<li><strong>Compress</strong> (<span class="math inline">\(W_2\)</span>): multiply the 64-dimensional result by a 64 × 32 matrix, projecting back to <code>d_model</code>. The output has to be 32-dimensional so it can be added back via the residual connection and passed to the next layer.</li>
+</ol>
+<p>Why expand and then compress? A 32-dimensional space is too small for the model to represent all the intermediate computations it needs (is there a carry? what’s the sum mod 10?). Expanding to 64 gives it temporary workspace. The compression forces the model to distill its computation back into the information that downstream layers actually need.</p>
+<div id="fd44ca7e" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>d_ff_demo <span class="op">=</span> <span class="dv">32</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>W_1 <span class="op">=</span> nn.Linear(d_model_demo, d_ff_demo)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>W_2 <span class="op">=</span> nn.Linear(d_ff_demo, d_model_demo)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> attn_output.detach()</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>hidden <span class="op">=</span> W_1(x)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>activated <span class="op">=</span> F.gelu(hidden)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>ffn_out <span class="op">=</span> W_2(activated)</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Input:     </span><span class="sc">{</span>x<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">       (seq_len x d_model)"</span>)</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Expanded:  </span><span class="sc">{</span>hidden<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">  (seq_len x d_ff) — wider for computation"</span>)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Activated: </span><span class="sc">{</span>activated<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">  (GELU zeroes out negative values)"</span>)</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Output:    </span><span class="sc">{</span>ffn_out<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">       (compressed back to d_model)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Input:     torch.Size([8, 8])       (seq_len x d_model)
+Expanded:  torch.Size([8, 32])  (seq_len x d_ff) — wider for computation
+Activated: torch.Size([8, 32])  (GELU zeroes out negative values)
+Output:    torch.Size([8, 8])       (compressed back to d_model)</code></pre>
+</div>
+</div>
+<p>The next plot shows two things: the GELU activation function itself (left panel) and which hidden neurons fire for each input position (right panel). The firing pattern reveals how the FFN begins to specialize — different positions activate different subsets of neurons.</p>
+<div id="11d5cd66" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">13</span>, <span class="dv">4</span>))</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>x_range <span class="op">=</span> torch.linspace(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">200</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].plot(x_range.numpy(), F.gelu(x_range).numpy(), linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].axhline(y<span class="op">=</span><span class="dv">0</span>, color<span class="op">=</span><span class="st">'gray'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].axvline(x<span class="op">=</span><span class="dv">0</span>, color<span class="op">=</span><span class="st">'gray'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">'GELU activation'</span>)<span class="op">;</span> axes[<span class="dv">0</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>fire_pattern <span class="op">=</span> (activated.detach().numpy() <span class="op">&gt;</span> <span class="fl">0.1</span>).astype(<span class="bu">float</span>)</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].imshow(fire_pattern.T, aspect<span class="op">=</span><span class="st">'auto'</span>, cmap<span class="op">=</span><span class="st">'Blues'</span>)</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_xticks(<span class="bu">range</span>(<span class="bu">len</span>(labels)))<span class="op">;</span> axes[<span class="dv">1</span>].set_xticklabels(labels)</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_xlabel(<span class="st">'Position'</span>)<span class="op">;</span> axes[<span class="dv">1</span>].set_ylabel(<span class="st">'Hidden neuron'</span>)</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">'Which neurons fire per position'</span>)</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Different positions activate different neuron subsets."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02-building-blocks_files/figure-html/cell-14-output-1.png" width="1238" height="374" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Different positions activate different neuron subsets.</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Connection: Attention as dynamic feature selection
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In classical statistics, feature selection picks which variables matter for prediction. A linear regression decides <em>once</em> which features to include; a LASSO shrinks irrelevant coefficients toward zero. Attention does the same thing, but <em>softly</em> (weighted combination rather than hard inclusion/exclusion) and <em>dynamically</em> (different weights for different inputs).</p>
+<p>When the ones-digit output position attends strongly to the ones-column inputs and weakly to everything else, it’s performing feature selection — deciding that positions 2 and 6 are the relevant “variables” for this prediction. The next position (tens digit) makes a different selection. Same weight matrices, different effective feature sets for each prediction. This is why attention is more expressive than a fixed feature selection: the relevance of each input position depends on the query.</p>
+</div>
+</div>
+</section>
+<section id="residual-connections-and-layer-normalization" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="residual-connections-and-layer-normalization"><span class="header-section-number">2.6</span> Residual connections and layer normalization</h2>
+<p>These two components aren’t doing any “thinking” — they’re plumbing that keeps the network trainable. Without them, deep networks break down: signals shrink to nothing, gradients vanish, and training stalls. They solve two different problems.</p>
+<p><strong>Residual connections</strong> solve the vanishing signal problem. When you multiply a vector by a random matrix, the result is typically smaller than the input. Stack six multiplications and the signal disappears:</p>
+<div id="8512da68" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> seq_emb.detach()</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>f_x <span class="op">=</span> attn_output.detach()</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Signal magnitude through 6 layers WITHOUT residuals:"</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>signal <span class="op">=</span> x.clone()</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> layer <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">6</span>):</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    W <span class="op">=</span> nn.Linear(d_model_demo, d_model_demo, bias<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    signal <span class="op">=</span> W(signal)</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  Layer </span><span class="sc">{</span>layer<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>signal<span class="sc">.</span>norm()<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">With residuals:"</span>)</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>signal <span class="op">=</span> x.clone()</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> layer <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">6</span>):</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>    W <span class="op">=</span> nn.Linear(d_model_demo, d_model_demo, bias<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>    signal <span class="op">=</span> signal <span class="op">+</span> W(signal)</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  Layer </span><span class="sc">{</span>layer<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>signal<span class="sc">.</span>norm()<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Signal magnitude through 6 layers WITHOUT residuals:
+  Layer 1: 6.9482
+  Layer 2: 3.7664
+  Layer 3: 2.2859
+  Layer 4: 1.3182
+  Layer 5: 0.7894
+  Layer 6: 0.3633
+
+With residuals:
+  Layer 1: 13.0920
+  Layer 2: 15.0312
+  Layer 3: 14.5872
+  Layer 4: 18.1350
+  Layer 5: 19.9002
+  Layer 6: 20.3635</code></pre>
+</div>
+</div>
+<p>Without residuals, the signal vanishes. With residuals, the original information passes through unchanged — each layer only needs to learn the <em>correction</em> (how to adjust the representation), not reconstruct the entire signal from scratch. This is why the dashed lines in <a href="#fig-block" class="quarto-xref">Figure&nbsp;<span>2.2</span></a> go around each sublayer: the input bypasses the sublayer and gets added back to the output.</p>
+<p><strong>LayerNorm</strong> solves a different problem: keeping activation values in a consistent range. As vectors pass through attention and FFN, their magnitudes can drift — some dimensions get very large, others very small. LayerNorm normalizes each vector to have mean 0 and standard deviation 1, then applies a learned scale (<span class="math inline">\(\gamma\)</span>) and shift (<span class="math inline">\(\beta\)</span>). This means every layer receives inputs in a predictable range, which makes training stable.</p>
+<div id="6b20b8ab" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>layer_norm <span class="op">=</span> nn.LayerNorm(d_model_demo)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>x_normed <span class="op">=</span> layer_norm(x <span class="op">+</span> f_x)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">4</span>))</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>vals_before <span class="op">=</span> (x <span class="op">+</span> f_x).detach().numpy().flatten()</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>vals_after <span class="op">=</span> x_normed.detach().numpy().flatten()</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].hist(vals_before, bins<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="ss">f'Before LayerNorm (std=</span><span class="sc">{</span>vals_before<span class="sc">.</span>std()<span class="sc">:.2f}</span><span class="ss">)'</span>)</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].hist(vals_after, bins<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span><span class="st">'green'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="ss">f'After LayerNorm (std=</span><span class="sc">{</span>vals_after<span class="sc">.</span>std()<span class="sc">:.2f}</span><span class="ss">)'</span>)</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax <span class="kw">in</span> axes:</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">'Activation value'</span>)</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"LayerNorm keeps activations in a stable range."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02-building-blocks_files/figure-html/cell-16-output-1.png" width="1140" height="374" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>LayerNorm keeps activations in a stable range.</code></pre>
+</div>
+</div>
+<p>The histograms show the effect: before LayerNorm, activations are spread across a wide, unpredictable range. After, they’re centered at 0 with a consistent spread. Think of it as re-calibrating a measuring instrument between each step — it doesn’t change what’s being measured, it just keeps the scale consistent so the next layer can interpret the values reliably.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./01-the-problem.html" class="pagination-link" aria-label="The Problem">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">The Problem</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./03-assembly-training.html" class="pagination-link" aria-label="Assembly and Training">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Assembly and Training</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

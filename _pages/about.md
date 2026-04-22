@@ -16,7 +16,7 @@ permalink: /about/
 
 <p>Before the PhD I did a BS and MS in mathematics at Cal Poly, taught math enrichment courses for advanced middle and high school students, and served as a Peace Corps volunteer in Botswana.</p>
 
-<p>I live in San Luis Obispo with my wife and our goldendoodle. Outside of research I play guitar and ukulele, make music in the evenings, hike whenever the chance comes up, and play Super Smash Bros. Melee.</p>
+<p>I live in San Luis Obispo with my wife and our goldendoodle. Outside of research I play guitar and ukulele, hike when I can, get into the occasional racket sport, and meet up with friends for board games and Super Smash Bros. Melee.</p>
 
 <h2>Get in touch</h2>
 

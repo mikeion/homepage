@@ -81,4 +81,4 @@ So when your favorite LLM gets better at following instructions or writing code,
 
 The code lives in a Quarto book: [How a Transformer Learns Addition]({{ '/notes/transformers-from-scratch/' | relative_url }}). The community version of the same exercise is [AdderBoard](https://github.com/anadim/AdderBoard), which tracks the smallest transformer that can add two 10-digit numbers. The smallest hand-coded entry uses six parameters.
 
-*Next: [The same weights, a different model]({{ '/blog/the-same-weights-a-different-model/' | relative_url }}), on why context changes what the model effectively is.*
+*Next in this series: why context changes what the model effectively is.*

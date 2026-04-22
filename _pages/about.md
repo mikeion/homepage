@@ -14,7 +14,7 @@ permalink: /about/
 
 <p>I'm a Postdoctoral Research Fellow at the University of Michigan School of Information, working with <a href="https://websites.umich.edu/~kevynct/">Kevyn Collins-Thompson</a>. My PhD was at Michigan too, with <a href="https://deborahloewenbergball.com/">Deborah Ball</a>. I came to AI evaluation through education research — measurement theory and discourse analysis — rather than the other way around, and my work now sits at that intersection.</p>
 
-<p>Before the PhD I did a BS and MS in mathematics at Cal Poly, taught high school math, and spent two years as a Peace Corps volunteer in Botswana.</p>
+<p>Before the PhD I did a BS and MS in mathematics at Cal Poly, taught math enrichment courses for advanced middle and high school students, and served as a Peace Corps volunteer in Botswana.</p>
 
 <p>I live in San Luis Obispo with my wife and our goldendoodle. Outside of research I play guitar and ukulele, make music in the evenings, hike whenever the chance comes up, and play Super Smash Bros. Melee.</p>
 

@@ -3,13 +3,16 @@ layout: default
 ---
 
 <section class="hero">
-  <h1>Mike Ion</h1>
-  <div class="role">Postdoctoral Research Fellow · University of Michigan School of Information</div>
-  <p>I develop statistical methods for evaluating language models — measuring the fidelity of their outputs, diagnosing where common evaluation metrics fail, and characterizing how fine-tuning deforms output distributions. My work sits at the intersection of measurement theory and statistical ML, with applications in education and conversational AI.</p>
-  <p class="hero-links"><a href="{{ '/about/' | relative_url }}">more about me →</a></p>
+  <img src="{{ '/assets/images/headshot.avif' | relative_url }}" alt="Mike Ion" class="hero-photo">
+  <div class="hero-text">
+    <h1>Mike Ion</h1>
+    <div class="role">Postdoctoral Research Fellow · University of Michigan School of Information</div>
+    <p>I study how to tell when a language model is actually doing what we asked it to, and where common evaluation metrics quietly fail. My work lives at the intersection of measurement theory and statistical ML, with applications in education and conversational AI.</p>
+    <p class="hero-links"><a href="{{ '/about/' | relative_url }}">more about me →</a></p>
+  </div>
 </section>
 
-<h2>Research</h2>
+<h2>Current research</h2>
 <ol class="threads">
   <li><strong>Evaluation of LLM output distributions.</strong> Per-prompt similarity metrics (cosine, BERTScore) can systematically misrank instruction-tuned models. Instruction tuning shifts the <em>center</em> of the output distribution while preserving its <em>spread</em>; cosine tracks the spread and misses the shift. The blind spot has direct implications for training-data filtering pipelines.</li>
   <li><strong>Fidelity of synthetic conversational data.</strong> Adapting propensity-score MSE from tabular synthetic data to conversations, with L1-regularized classifiers that yield per-feature diagnostics and dimensional decomposition. Practitioners get not just a quality score but a directive on what to fix next.</li>

@@ -4,6 +4,7 @@
   --text: #1a1a1a;
   --muted: #6a6a6a;
   --link: #0b5fff;
+  --accent: #b85c38;
   --rule: #e5e5e5;
   --bg: #ffffff;
   --max: 640px;
@@ -37,8 +38,9 @@ h1, h2, h3 {
 }
 
 h1 {
-  font-size: 1.6rem;
-  margin: 0 0 0.15rem 0;
+  font-size: 2rem;
+  margin: 0 0 0.25rem 0;
+  letter-spacing: -0.02em;
 }
 
 h2 {
@@ -47,6 +49,17 @@ h2 {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--muted);
+  position: relative;
+  padding-left: 1.1rem;
+}
+h2::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.6rem;
+  height: 2px;
+  background: var(--accent);
 }
 
 h3 {
@@ -87,13 +100,29 @@ hr {
 }
 
 /* Hero */
-.hero { margin-bottom: 2.5rem; }
+.hero {
+  margin-bottom: 3rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+.hero-photo {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  margin-top: 0.3rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+.hero-text { flex: 1; min-width: 0; }
 .hero .role {
   color: var(--muted);
   font-size: 0.95rem;
   margin-bottom: 1.2rem;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
 }
+.hero p { margin-bottom: 0.8rem; }
 
 /* Research directions */
 .threads { counter-reset: thread; padding: 0; list-style: none; margin: 0; }
@@ -183,6 +212,31 @@ hr {
   line-height: 1.5;
 }
 
+/* Publication type tags */
+.tag {
+  display: inline-block;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.12rem 0.45rem;
+  border: 1px solid;
+  border-radius: 3px;
+  margin-right: 0.45rem;
+  vertical-align: 0.12em;
+  white-space: nowrap;
+}
+.tag-journal      { color: #1a56db; border-color: #b8d0f5; background: #f4f8ff; }
+.tag-proceedings  { color: #6b46c1; border-color: #d4c5ee; background: #f9f5ff; }
+.tag-workshop     { color: #8855cc; border-color: #ddcbf0; background: #faf6ff; }
+.tag-demo         { color: #0d7a8a; border-color: #a8d5dd; background: #f2fafc; }
+.tag-chapter      { color: #92582c; border-color: #e0c4a3; background: #fff8ef; }
+.tag-talk         { color: #2d7a3e; border-color: #a8d9b5; background: #f3faf5; }
+.tag-poster       { color: #b23c5e; border-color: #e6b8c6; background: #fff5f7; }
+.tag-article      { color: #666;    border-color: #d0d0d0; background: #f8f8f8; }
+.tag-preprint     { color: #9b6914; border-color: #dec897; background: #fffbee; }
+
 /* Projects page */
 .project {
   margin-bottom: 2rem;
@@ -228,9 +282,22 @@ footer {
 footer a { color: var(--muted); }
 footer a:hover { color: var(--link); }
 
+/* Footer social icons */
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.1rem 1rem;
+  margin-top: 0.2rem;
+}
+.footer-links a { color: var(--muted); }
+.footer-links a:hover { color: var(--link); }
+
 @media (max-width: 480px) {
   main { padding: 2rem 1rem 3rem; }
   .topnav { font-size: 0.82rem; }
   .topnav .sep { margin: 0 0.2rem; }
   .news li { grid-template-columns: 4.5rem 1fr; gap: 0.6rem; }
+  .hero { gap: 1rem; }
+  .hero-photo { width: 72px; height: 72px; }
+  h1 { font-size: 1.6rem; }
 }

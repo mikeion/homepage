@@ -9,3 +9,4 @@ _preview/
 .DS_Store
 Thumbs.db
 _drafts/
+.claude/

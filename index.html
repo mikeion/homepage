@@ -12,33 +12,37 @@ layout: default
   </div>
 </section>
 
+<div class="job-banner">
+  <strong>On the job market for 2026–27.</strong> I'm looking for research-scientist, applied-AI, or faculty roles where I can build evaluation methods for language models and the human-interaction data they learn from and act on. <a href="{{ '/about/#availability' | relative_url }}">what I'm looking for →</a> · <a href="{{ '/assets/docs/cv-ion.pdf' | relative_url }}">CV →</a> · <a href="mailto:mikeion@umich.edu">email →</a>
+</div>
+
 <h2>Current research</h2>
 <ol class="threads">
-  <li><strong>Evaluation of LLM output distributions.</strong> Per-prompt similarity metrics (cosine, BERTScore) can systematically misrank instruction-tuned models: instruction tuning shifts the center of the output distribution while preserving its spread, and cosine tracks the spread and misses the shift. Direct implications for training-data filtering pipelines.</li>
+  <li><strong>Evaluation of LLM output distributions.</strong> Per-prompt similarity metrics (cosine, BERTScore) can systematically misrank instruction-tuned models: instruction tuning shifts the center of the output distribution while preserving its spread, and cosine tracks the spread and misses the shift. Direct implications for training-data filtering pipelines. <a href="#paper-eval-blind-spot">→ paper</a></li>
   <li><strong>Temporal structure in multi-party conversation.</strong> Lightweight single-pass features (burst coefficient, cluster density, response acceleration, interaction momentum, timing consistency) recover six conversational archetypes on MathMentorDB, with resolution rates ranging from above 90% to under 30%. Earlier Bayesian hierarchical Hawkes analysis presented at <a href="https://ww2.amstat.org/meetings/jsm/2025/">JSM 2025</a>.</li>
-  <li><strong>Discourse classification with LLMs.</strong> A 32-move pedagogical taxonomy labeled by three production LLMs across thousands of MathMentorDB messages. Inter-model agreement is high for coarse categories but diverges on fine-grained moves; discourse-move sequences predict whether conversations resolve or get abandoned.</li>
+  <li><strong>Discourse classification with LLMs.</strong> A 32-move pedagogical taxonomy labeled by three production LLMs across thousands of MathMentorDB messages. Inter-model agreement is high for coarse categories but diverges on fine-grained moves; discourse-move sequences predict whether conversations resolve or get abandoned. <a href="#paper-moves-to-pathways">→ paper</a></li>
   <li><strong>Conversational data infrastructure.</strong> MathMentorDB: 200,332 structured math-tutoring conversations reconstructed from 5.5M raw Discord messages via a disentanglement pipeline combining message timing, participant co-occurrence, and topic coherence. Submitted to LREC-COLING 2026 for public release.</li>
 </ol>
 
 <h2 id="selected-papers">Selected Papers</h2>
 
-<div class="paper">
+<div class="paper" id="paper-eval-blind-spot">
   <div class="venue">in preparation</div>
-  <span class="title">The Evaluation Blind Spot: Per-Prompt Similarity Can Systematically Misrank Instruction-Tuned Text Distributions</span>
+  <a class="title" href="{{ '/publications/' | relative_url }}#pub-eval-blind-spot">The Evaluation Blind Spot: Per-Prompt Similarity Can Systematically Misrank Instruction-Tuned Text Distributions</a>
   <p class="blurb">Across 8,290 paired human and model continuations, cosine similarity ranks instruction-tuned models as most human-like in 5 of 6 genres, while kernel MMD² ranks those same models as least human-like. A 67-feature linguistic decomposition explains the disagreement: instruction tuning shifts the distribution's center without changing its spread. Per-prompt similarity is insensitive to the shift; population-level distance responds to both.</p>
   <div class="meta">Ion, M. &amp; Godfrey, J. · 2026</div>
 </div>
 
-<div class="paper">
+<div class="paper" id="paper-simulation-fidelity">
   <div class="venue">ACM Learning@Scale 2026</div>
-  <span class="title">Measuring Simulation Fidelity via Statistical Detectability: A Diagnostic Framework for AI-Generated Tutoring Conversations</span>
+  <a class="title" href="{{ '/publications/' | relative_url }}#pub-simulation-fidelity">Measuring Simulation Fidelity via Statistical Detectability: A Diagnostic Framework for AI-Generated Tutoring Conversations</a>
   <p class="blurb">A propensity-score MSE framework for assessing whether LLM-generated conversations match the distribution of real ones. L1-regularized classifiers on interpretable feature subsets reveal that surface and cognitive fidelity are coupled: improving one without attending to the other can worsen overall fidelity. The framework turns a scalar quality score into a diagnostic for iterative prompt refinement.</p>
   <div class="meta">Ion, M. &amp; Collins-Thompson, K. · 2026</div>
 </div>
 
-<div class="paper">
+<div class="paper" id="paper-moves-to-pathways">
   <div class="venue">AIED 2026 · Late-Breaking Results poster</div>
-  <span class="title">From Moves to Pathways: Characterizing Pedagogical Discourse Dynamics in Online Tutoring with Bayesian Generative Modeling</span>
+  <a class="title" href="{{ '/publications/' | relative_url }}#pub-moves-to-pathways">From Moves to Pathways: Characterizing Pedagogical Discourse Dynamics in Online Tutoring with Bayesian Generative Modeling</a>
   <p class="blurb">A hierarchical Bayesian Hidden Markov Model fit to 2,437 math tutoring conversations (51k+ messages) from MathMentorDB, using LLM-classified discourse moves. Four latent pedagogical states emerge unsupervised (Problem Introduction, Exploration, Lecturing, Working). Resolved and unresolved sessions differ less in what tutors say than in whether students are actively attempting inference — replicating impasse-driven learning findings at two orders of magnitude greater scale than prior manually-annotated studies.</p>
   <div class="meta">Light, M., Ion, M. &amp; Collins-Thompson, K. · 2026</div>
 </div>
@@ -62,8 +66,11 @@ layout: default
 
 <h2>News</h2>
 <ul class="news">
+  <li><span class="date">Jun 2026</span><span>Presenting at the <a href="https://festival-of-learning-2026.info/">Festival of Learning 2026</a> in Seoul (Jun 27–Jul 3): <em>Measuring Simulation Fidelity via Statistical Detectability</em> at <a href="https://learningatscale.hosting.acm.org/las2026/">ACM Learning@Scale</a>, and <em>From Moves to Pathways</em> (with Michael Light) as a Late-Breaking Results poster at <a href="https://www.aied-conference.org/2026">AIED</a>.</span></li>
+  <li><span class="date">Jun 2026</span><span><strong>On the job market for 2026–27.</strong> I'm looking for research-scientist, applied-AI, or faculty roles in LLM evaluation and conversational/educational data. <a href="{{ '/about/#availability' | relative_url }}">What I'm looking for →</a></span></li>
   <li><span class="date">Apr 2026</span><span><em>Measuring Simulation Fidelity via Statistical Detectability</em> (with Kevyn Collins-Thompson) accepted to <a href="https://learningatscale.acm.org/">ACM Learning@Scale 2026</a> (Seoul, July 2026) — a propensity-score MSE diagnostic for whether LLM-generated tutoring conversations match the distribution of real ones, showing surface and cognitive fidelity are coupled.</span></li>
   <li><span class="date">Apr 2026</span><span><em>From Moves to Pathways</em> (with Michael Light and Kevyn Collins-Thompson) accepted to AIED 2026 (Late-Breaking Results poster track) — a hierarchical Bayesian HMM over 2,437 math tutoring conversations recovers four latent pedagogical states unsupervised; resolved and unresolved sessions differ less in what tutors say than in whether students are actively attempting inference.</span></li>
+  <li><span class="date">Apr 2026</span><span>Published <em><a href="{{ '/notes/transformers-from-scratch/' | relative_url }}">How a Transformer Learns Addition</a></em> — a 7-chapter Quarto book building a decoder-only transformer component by component and training it on three-digit addition. 17K parameters, inspectable at every layer.</span></li>
   <li><span class="date">Mar 2026</span><span>Talk at Infinicon (San Luis Obispo): a walkthrough of getting LLMs to return structured outputs — typical prompting approaches for specific fields and categories, then fine-tuning an open-weight model on a free Colab instance and comparing the two. <a href="https://colab.research.google.com/drive/1WVyyTRVHiZJV2LyHE8AtH3KjQJIPk0wd?usp=sharing">[notebook]</a></span></li>
   <li><span class="date">Oct 2025</span><span>Preprint <em>Chip-Firing and the Sandpile Group of the R10 Matroid</em> posted on <a href="https://arxiv.org/abs/2510.26021">arXiv</a> (with <a href="https://sites.google.com/view/alexmcdonough/home">Alex McDonough</a>) and since submitted to Galois Journal of Algebra — a description of chip-firing on R10 using complex numbers and representatives for the 162 equivalence classes of its sandpile group.</span></li>
   <li><span class="date">Sep 2025</span><span>Started as Lecturer in the Statistics Department at California Polytechnic State University, San Luis Obispo.</span></li>

@@ -6,18 +6,25 @@ permalink: /publications/
 
 <div class="publications">
 
+<h3>Under Review &amp; In Preparation</h3>
+<ul>
+<li id="pub-eval-blind-spot"><span class="tag tag-preprint">preprint</span> <strong>Ion, M.</strong>, Godfrey, J. (2026). <em>The Evaluation Blind Spot: Per-Prompt Similarity Can Systematically Misrank Instruction-Tuned Text Distributions.</em> In preparation.</li>
+<li><span class="tag tag-submitted">under review</span> <strong>Ion, M.</strong>, Collins-Thompson, K. (2026). <em>Measuring What Matters: A Scenario-Driven, Multidimensional Framework for Evaluating LLM Tutors.</em> Under review at the Conference on Empirical Methods in Natural Language Processing (EMNLP '26).</li>
+<li><span class="tag tag-submitted">under review</span> Asthana, S., Banovic, N., <strong>Ion, M.</strong>, Collins-Thompson, K. (2026). <em>Understanding the Challenges and Opportunities for Responsible AI Use in Prerequisite Skill Assessments for Interdisciplinary Graduate Programs.</em> Under review at the ACM Conference on Human Factors in Computing Systems (CHI '26).</li>
+<li><span class="tag tag-submitted">in prep</span> <strong>Ion, M.</strong>, Ball, D.L. (2026). <em>Teaching and Learning in the Age of Generative AI: Understanding the Human Work of Instruction.</em> In preparation for <em>For the Learning of Mathematics</em>.</li>
+</ul>
+
 <h3>2026</h3>
 <ul>
-<li><span class="tag tag-preprint">preprint</span> <strong>Ion, M.</strong>, Godfrey, J. (2026). <em>The Evaluation Blind Spot: Per-Prompt Similarity Can Systematically Misrank Instruction-Tuned Text Distributions.</em> In preparation.</li>
-<li><span class="tag tag-proceedings">proceedings</span> Light, M., <strong>Ion, M.</strong>, Collins-Thompson, K. (2026). <em>From Moves to Pathways: Characterizing Pedagogical Discourse Dynamics in Online Tutoring with Bayesian Generative Modeling.</em> 27th International Conference on Artificial Intelligence in Education (AIED '26), Late-Breaking Results (Posters) Track. Accepted, 29% acceptance rate.</li>
-<li><span class="tag tag-proceedings">proceedings</span> <strong>Ion, M.</strong>, Collins-Thompson, K. (2026). <em>Measuring Simulation Fidelity via Statistical Detectability: A Diagnostic Framework for AI-Generated Tutoring Conversations.</em> In Proceedings of the 13th ACM Conference on Learning @ Scale (L@S '26). ACM, New York, NY, USA, 11 pages. Accepted, 22% acceptance rate.</li>
+<li id="pub-moves-to-pathways"><span class="tag tag-proceedings">proceedings</span> Light, M., <strong>Ion, M.</strong>, Collins-Thompson, K. (2026). <em>From Moves to Pathways: Characterizing Pedagogical Discourse Dynamics in Online Tutoring with Bayesian Generative Modeling.</em> 27th International Conference on Artificial Intelligence in Education (AIED '26), Late-Breaking Results (Posters) Track. Accepted, 29% acceptance rate.</li>
+<li id="pub-simulation-fidelity"><span class="tag tag-proceedings">proceedings</span> <strong>Ion, M.</strong>, Collins-Thompson, K. (2026). <em>Measuring Simulation Fidelity via Statistical Detectability: A Diagnostic Framework for AI-Generated Tutoring Conversations.</em> In Proceedings of the 13th ACM Conference on Learning @ Scale (L@S '26). ACM, New York, NY, USA, 11 pages. Accepted, 22% acceptance rate. <a href="https://dl.acm.org/doi/10.1145/3774398.3811608">[paper]</a></li>
 <li><span class="tag tag-demo">demo</span> <strong>Ion, M.</strong>, Collins-Thompson, K. (2026). <em>A Fidelity Diagnostic Workbench for Synthetic Tutoring Conversations.</em> ACM Conference on Learning @ Scale (L@S 2026), Demonstration Track.</li>
 <li><span class="tag tag-talk">talk</span> <strong>Ion, M.</strong> (2026). <em>Structured Outputs from LLMs: Prompting vs. Fine-Tuning on Free Colab.</em> Infinicon. San Luis Obispo, CA. <a href="https://colab.research.google.com/drive/1WVyyTRVHiZJV2LyHE8AtH3KjQJIPk0wd?usp=sharing">[notebook]</a></li>
 </ul>
 
 <h3>2025</h3>
 <ul>
-<li><span class="tag tag-preprint">preprint</span> <strong>Ion, M.</strong>, <a href="https://sites.google.com/view/alexmcdonough/home">McDonough, A.</a> (2025). <em>Chip-firing and the Sandpile Group of the R10 Matroid.</em> Preprint on arXiv; under review at Galois Journal of Algebra. <a href="https://arxiv.org/abs/2510.26021">[arXiv]</a></li>
+<li><span class="tag tag-journal">journal</span> <strong>Ion, M.</strong>, <a href="https://sites.google.com/view/alexmcdonough/home">McDonough, A.</a> (in press). <em>Chip-Firing and the Sandpile Group of the R10 Matroid.</em> Galois Journal of Algebra, Special Issue on Recent Advances in Algebraic Combinatorics. <a href="https://gja.intrasci.net/article_25156.html">[paper]</a> <a href="https://arxiv.org/abs/2510.26021">[arXiv]</a></li>
 <li><span class="tag tag-workshop">workshop</span> <strong>Ion, M.</strong>, Asthana, S., Jiao, F., Wang, T., Collins-Thompson, K. (2025). <em>Adaptive Knowledge Assessment in Simulated Coding Interviews.</em> Innovation and Responsibility in AI-Supported Education Workshop (AAAI 2025). Proceedings of Machine Learning Research, 273, 260–262. Philadelphia, PA. <a href="https://proceedings.mlr.press/v273/ion25a.html">[paper]</a></li>
 <li><span class="tag tag-talk">talk</span> <strong>Ion, M.</strong> (2025). <em>Bayesian Hierarchical Modeling of Large-Scale Math Tutoring Dialogues.</em> Joint Statistical Meetings 2025. Nashville, TN. <a href="https://ww3.aievolution.com/JSMAnnual2025/Events/viewEv?ev=4247">[session]</a></li>
 <li><span class="tag tag-talk">talk</span> <strong>Ion, M.</strong> (2025). <em>Text-as-Data in Mathematics Education: Harnessing LLMs to Analyze Student Conversations at Scale.</em> AMS Special Session on SoTL: Connecting Generative AI and Scholarly Inquiry to Improve Teaching and Learning, Joint Mathematics Meetings (JMM). Seattle, WA. <em>Invited.</em> <a href="https://meetings.ams.org/math/jmm2025/meetingapp.cgi/Paper/45743">[session]</a></li>

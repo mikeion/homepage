@@ -124,6 +124,20 @@ hr {
 }
 .hero p { margin-bottom: 0.8rem; }
 
+/* Job-market banner */
+.job-banner {
+  margin: 0 0 3rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid #e0c4b3;
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  background: #fdf7f3;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+.job-banner strong { color: var(--accent); }
+.job-banner a { white-space: nowrap; }
+
 /* Research directions */
 .threads { counter-reset: thread; padding: 0; list-style: none; margin: 0; }
 .threads li {
@@ -164,7 +178,10 @@ hr {
   font-weight: 600;
   display: block;
   margin-bottom: 0.3rem;
+  color: var(--text);
+  border-bottom: none;
 }
+.paper .title:hover { color: var(--link); }
 .paper .blurb {
   color: #333;
   margin-bottom: 0.4rem;
@@ -236,6 +253,7 @@ hr {
 .tag-poster       { color: #b23c5e; border-color: #e6b8c6; background: #fff5f7; }
 .tag-article      { color: #666;    border-color: #d0d0d0; background: #f8f8f8; }
 .tag-preprint     { color: #9b6914; border-color: #dec897; background: #fffbee; }
+.tag-submitted    { color: #555;    border-color: #cfcfcf; background: #f6f6f6; }
 
 /* Projects page */
 .project {

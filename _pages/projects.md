@@ -52,7 +52,7 @@ permalink: /projects/
 
 <div class="project">
   <h3>MathMentorDB</h3>
-  <div class="meta">Research infrastructure · 200K+ conversations, 5.5M messages</div>
+  <div class="meta">Research infrastructure · 200K+ conversations, 5.4M messages</div>
   <p>Structured dataset built from a large public mathematics Discord server, transformed into conversation-level units with participant roles, timestamps, and channel metadata. Underlies most of my recent empirical work on tutoring discourse. A pseudonymized release is available on <a href="https://huggingface.co/datasets/mikeion/mathconverse_pseudonyms">Hugging Face</a>.</p>
 </div>
 
